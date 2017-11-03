@@ -25562,7 +25562,7 @@ page-notifications .topic .topicTitle {
 page-notifications .topic .replyMessage {
   margin: 5;
   font-size: 13px;
-  color: #FF2525;
+  color: grey;
 }
 
 page-notifications .topic .content {
