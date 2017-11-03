@@ -1,0 +1,26 @@
+$smrtRed:    #FF2525;
+$smrtGrey:   #696969;
+page-notifications {
+  .topic {
+    padding-top:10px;
+    .date {
+      color: grey;
+      font-size: 10px;
+      float: right;
+    }
+    .topicTitle{
+      font-weight: bold;
+      font-size: 13px;
+    }
+    .replyMessage{
+      margin :5;
+      font-size:13px;
+    }
+    ion-note{
+      font-color: $smrtGrey;
+      font-size: 14px;
+    }
+
+  }
+
+}

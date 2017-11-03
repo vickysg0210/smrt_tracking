@@ -1,0 +1,34 @@
+page-tracking {
+  .nav-badge{
+    background-color: $smrtRed;
+    font-size: 10px;
+    height: 16px;
+    width: 16px;
+    padding: 3px 0px;
+    margin: -12px 0px 0px -12px;
+  }
+  .trackingtitle{
+    display:inline-block;
+    font-weight: bold;
+  }
+  .info{
+    display: inline-block;
+    float: right;
+  }
+  .trackingitem{
+    padding-top: 10px;
+  }
+  .headerLable{
+    color: Grey;
+    font-weight: bold;
+  }
+  .loginDate{
+    color: Grey;
+  }
+  .name{
+    font-weight: bold !important;
+  }
+  .logoutButton{
+    background-color: $smrtOrange;
+  }
+}
