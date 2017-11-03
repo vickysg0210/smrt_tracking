@@ -1,23 +1,29 @@
 $smrtRed:    #FF2525;
 $smrtGrey:   #696969;
+$smrtOrange: rgb(255,175,0);
+
 page-notifications {
   .topic {
+    margin : 6px;
     padding-top:10px;
     .date {
-      color: grey;
+      color: DarkGray;
       font-size: 10px;
       float: right;
     }
     .topicTitle{
+      color: $smrtOrange;
       font-weight: bold;
       font-size: 13px;
     }
     .replyMessage{
       margin :5;
       font-size:13px;
+      color: $smrtRed;
     }
-    ion-note{
-      font-color: $smrtGrey;
+    .content{
+      margin-top:10px;
+      color:black;
       font-size: 14px;
     }
 

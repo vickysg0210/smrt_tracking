@@ -25543,16 +25543,18 @@ ion-navbar.toolbar {
 }
 
 page-notifications .topic {
+  margin: 6px;
   padding-top: 10px;
 }
 
 page-notifications .topic .date {
-  color: grey;
+  color: DarkGray;
   font-size: 10px;
   float: right;
 }
 
 page-notifications .topic .topicTitle {
+  color: #ffaf00;
   font-weight: bold;
   font-size: 13px;
 }
@@ -25560,10 +25562,12 @@ page-notifications .topic .topicTitle {
 page-notifications .topic .replyMessage {
   margin: 5;
   font-size: 13px;
+  color: #FF2525;
 }
 
-page-notifications .topic ion-note {
-  font-color: #696969;
+page-notifications .topic .content {
+  margin-top: 10px;
+  color: black;
   font-size: 14px;
 }
 

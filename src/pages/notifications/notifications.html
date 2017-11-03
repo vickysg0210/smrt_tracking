@@ -16,7 +16,7 @@
         {{topic.title}}
         <span class="date">{{ topic.date }}</span>
       </h2>
-      <ion-note>  {{topic.content}}    </ion-note>
+      <ion-note class="content">{{topic.author.username}} : {{topic.content}}</ion-note>
       <p class="replyMessage">
         {{ topic.message }}
       </p>
