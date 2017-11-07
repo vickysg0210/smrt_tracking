@@ -17286,7 +17286,7 @@ ion-searchbar {
 .searchbar-ios .searchbar-search-icon {
   left: 9px;
   top: 9px;
-  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2013%2013'><path%20fill='rgba(0,%200,%200,%200.5)'%20d='M5,1c2.2,0,4,1.8,4,4S7.2,9,5,9S1,7.2,1,5S2.8,1,5,1%20M5,0C2.2,0,0,2.2,0,5s2.2,5,5,5s5-2.2,5-5S7.8,0,5,0%20L5,0z'/><line%20stroke='rgba(0,%200,%200,%200.5)'%20stroke-miterlimit='10'%20x1='12.6'%20y1='12.6'%20x2='8.2'%20y2='8.2'/></svg>");
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2022%2022'><path%20fill='black'%20d='M18,7c0.542,0,1,0.458,1,1v7c0,0.542-0.458,1-1,1h-8H9.171L9,16.171V16H7H6c-0.542,0-1-0.458-1-1V8c0-0.542,0.458-1,1-1H18%20%20%20%20M18,5H6C4.35,5,3,6.35,3,8v7c0,1.65,1.35,3,3,3h1v3l3-3h8c1.65,0,3-1.35,3-3V8C21,6.35,19.65,5,18,5z'/></svg>");
   margin-left: calc(50% - 60px);
   position: absolute;
   width: 14px;
@@ -17383,7 +17383,7 @@ ion-searchbar {
 }
 
 .toolbar-ios-primary .searchbar-ios .searchbar-search-icon {
-  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2013%2013'><path%20fill='rgba(255,%20255,%20255,%200.5)'%20d='M5,1c2.2,0,4,1.8,4,4S7.2,9,5,9S1,7.2,1,5S2.8,1,5,1%20M5,0C2.2,0,0,2.2,0,5s2.2,5,5,5s5-2.2,5-5S7.8,0,5,0%20L5,0z'/><line%20stroke='rgba(255,%20255,%20255,%200.5)'%20stroke-miterlimit='10'%20x1='12.6'%20y1='12.6'%20x2='8.2'%20y2='8.2'/></svg>");
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2022%2022'><path%20fill='rgba(255,%20255,%20255,%200.5)'%20d='M18,7c0.542,0,1,0.458,1,1v7c0,0.542-0.458,1-1,1h-8H9.171L9,16.171V16H7H6c-0.542,0-1-0.458-1-1V8c0-0.542,0.458-1,1-1H18%20%20%20%20M18,5H6C4.35,5,3,6.35,3,8v7c0,1.65,1.35,3,3,3h1v3l3-3h8c1.65,0,3-1.35,3-3V8C21,6.35,19.65,5,18,5z'/></svg>");
 }
 
 .toolbar-ios-primary .searchbar-ios .searchbar-input {
@@ -17421,7 +17421,7 @@ ion-searchbar {
 }
 
 .toolbar-ios-secondary .searchbar-ios .searchbar-search-icon {
-  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2013%2013'><path%20fill='rgba(255,%20255,%20255,%200.5)'%20d='M5,1c2.2,0,4,1.8,4,4S7.2,9,5,9S1,7.2,1,5S2.8,1,5,1%20M5,0C2.2,0,0,2.2,0,5s2.2,5,5,5s5-2.2,5-5S7.8,0,5,0%20L5,0z'/><line%20stroke='rgba(255,%20255,%20255,%200.5)'%20stroke-miterlimit='10'%20x1='12.6'%20y1='12.6'%20x2='8.2'%20y2='8.2'/></svg>");
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2022%2022'><path%20fill='rgba(255,%20255,%20255,%200.5)'%20d='M18,7c0.542,0,1,0.458,1,1v7c0,0.542-0.458,1-1,1h-8H9.171L9,16.171V16H7H6c-0.542,0-1-0.458-1-1V8c0-0.542,0.458-1,1-1H18%20%20%20%20M18,5H6C4.35,5,3,6.35,3,8v7c0,1.65,1.35,3,3,3h1v3l3-3h8c1.65,0,3-1.35,3-3V8C21,6.35,19.65,5,18,5z'/></svg>");
 }
 
 .toolbar-ios-secondary .searchbar-ios .searchbar-input {
@@ -17459,7 +17459,7 @@ ion-searchbar {
 }
 
 .toolbar-ios-danger .searchbar-ios .searchbar-search-icon {
-  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2013%2013'><path%20fill='rgba(255,%20255,%20255,%200.5)'%20d='M5,1c2.2,0,4,1.8,4,4S7.2,9,5,9S1,7.2,1,5S2.8,1,5,1%20M5,0C2.2,0,0,2.2,0,5s2.2,5,5,5s5-2.2,5-5S7.8,0,5,0%20L5,0z'/><line%20stroke='rgba(255,%20255,%20255,%200.5)'%20stroke-miterlimit='10'%20x1='12.6'%20y1='12.6'%20x2='8.2'%20y2='8.2'/></svg>");
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2022%2022'><path%20fill='rgba(255,%20255,%20255,%200.5)'%20d='M18,7c0.542,0,1,0.458,1,1v7c0,0.542-0.458,1-1,1h-8H9.171L9,16.171V16H7H6c-0.542,0-1-0.458-1-1V8c0-0.542,0.458-1,1-1H18%20%20%20%20M18,5H6C4.35,5,3,6.35,3,8v7c0,1.65,1.35,3,3,3h1v3l3-3h8c1.65,0,3-1.35,3-3V8C21,6.35,19.65,5,18,5z'/></svg>");
 }
 
 .toolbar-ios-danger .searchbar-ios .searchbar-input {
@@ -17497,7 +17497,7 @@ ion-searchbar {
 }
 
 .toolbar-ios-light .searchbar-ios .searchbar-search-icon {
-  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2013%2013'><path%20fill='rgba(0,%200,%200,%200.5)'%20d='M5,1c2.2,0,4,1.8,4,4S7.2,9,5,9S1,7.2,1,5S2.8,1,5,1%20M5,0C2.2,0,0,2.2,0,5s2.2,5,5,5s5-2.2,5-5S7.8,0,5,0%20L5,0z'/><line%20stroke='rgba(0,%200,%200,%200.5)'%20stroke-miterlimit='10'%20x1='12.6'%20y1='12.6'%20x2='8.2'%20y2='8.2'/></svg>");
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2022%2022'><path%20fill='rgba(0,%200,%200,%200.5)'%20d='M18,7c0.542,0,1,0.458,1,1v7c0,0.542-0.458,1-1,1h-8H9.171L9,16.171V16H7H6c-0.542,0-1-0.458-1-1V8c0-0.542,0.458-1,1-1H18%20%20%20%20M18,5H6C4.35,5,3,6.35,3,8v7c0,1.65,1.35,3,3,3h1v3l3-3h8c1.65,0,3-1.35,3-3V8C21,6.35,19.65,5,18,5z'/></svg>");
 }
 
 .toolbar-ios-light .searchbar-ios .searchbar-input {
@@ -17535,7 +17535,7 @@ ion-searchbar {
 }
 
 .toolbar-ios-dark .searchbar-ios .searchbar-search-icon {
-  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2013%2013'><path%20fill='rgba(255,%20255,%20255,%200.5)'%20d='M5,1c2.2,0,4,1.8,4,4S7.2,9,5,9S1,7.2,1,5S2.8,1,5,1%20M5,0C2.2,0,0,2.2,0,5s2.2,5,5,5s5-2.2,5-5S7.8,0,5,0%20L5,0z'/><line%20stroke='rgba(255,%20255,%20255,%200.5)'%20stroke-miterlimit='10'%20x1='12.6'%20y1='12.6'%20x2='8.2'%20y2='8.2'/></svg>");
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2022%2022'><path%20fill='rgba(255,%20255,%20255,%200.5)'%20d='M18,7c0.542,0,1,0.458,1,1v7c0,0.542-0.458,1-1,1h-8H9.171L9,16.171V16H7H6c-0.542,0-1-0.458-1-1V8c0-0.542,0.458-1,1-1H18%20%20%20%20M18,5H6C4.35,5,3,6.35,3,8v7c0,1.65,1.35,3,3,3h1v3l3-3h8c1.65,0,3-1.35,3-3V8C21,6.35,19.65,5,18,5z'/></svg>");
 }
 
 .toolbar-ios-dark .searchbar-ios .searchbar-input {
@@ -17702,7 +17702,7 @@ ion-searchbar {
 .searchbar-wp .searchbar-search-icon {
   right: 8px;
   top: 5px;
-  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20512%20512'><path%20fill='%23858585'%20d='M337.509,305.372h-17.501l-6.571-5.486c20.791-25.232,33.922-57.054,33.922-93.257C347.358,127.632,283.896,64,205.135,64C127.452,64,64,127.632,64,206.629s63.452,142.628,142.225,142.628c35.011,0,67.831-13.167,92.991-34.008l6.561,5.487v17.551L415.18,448L448,415.086L337.509,305.372z%20M206.225,305.372c-54.702,0-98.463-43.887-98.463-98.743c0-54.858,43.761-98.742,98.463-98.742c54.7,0,98.462,43.884,98.462,98.742C304.687,261.485,260.925,305.372,206.225,305.372z'/></svg>");
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2022%2022'><path%20fill='fg-color'%20d='M18,7c0.542,0,1,0.458,1,1v7c0,0.542-0.458,1-1,1h-8H9.171L9,16.171V16H7H6c-0.542,0-1-0.458-1-1V8c0-0.542,0.458-1,1-1H18%20%20%20%20M18,5H6C4.35,5,3,6.35,3,8v7c0,1.65,1.35,3,3,3h1v3l3-3h8c1.65,0,3-1.35,3-3V8C21,6.35,19.65,5,18,5z'/></svg>");
   position: absolute;
   width: 21px;
   height: 21px;
@@ -25512,8 +25512,32 @@ ion-navbar.toolbar {
   min-height: calc(46px + constant(safe-area-inset-top));
 }
 
+station-icon .station-icon {
+  display: inline;
+  font-size: 16px;
+  color: white;
+  border: solid 2px lightGrey;
+  border-radius: 16px;
+}
+
+station-icon .station-icon .color-code {
+  padding: 0px 6px;
+}
+
+station-icon .station-icon .color-code:first-child {
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+
+station-icon .station-icon .color-code:last-child {
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
 .loginList {
   padding: 10px;
+  position: relative;
+  top: 56px;
 }
 
 .loginBackground {
@@ -25522,18 +25546,9 @@ ion-navbar.toolbar {
   background-size: cover;
 }
 
-.buttonDiv {
-  padding-top: 40px;
-  margin-left: 3px;
-}
-
 .lable {
   color: DarkRed;
   font-weight: bold;
-}
-
-.notificationIcon {
-  color: black;
 }
 
 .input {
@@ -25545,7 +25560,40 @@ ion-navbar.toolbar {
   font-weight: bold;
 }
 
-.nav-badge {
+.login {
+  margin: 26px;
+}
+
+page-notifications .topic {
+  margin: 6px;
+  padding-top: 10px;
+}
+
+page-notifications .topic .date {
+  color: DarkGray;
+  font-size: 10px;
+  float: right;
+}
+
+page-notifications .topic .topicTitle {
+  color: #ffaf00;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+page-notifications .topic .replyMessage {
+  margin: 5;
+  font-size: 13px;
+  color: #FF2525;
+}
+
+page-notifications .topic .content {
+  margin-top: 10px;
+  color: black;
+  font-size: 14px;
+}
+
+page-tracking .nav-badge {
   background-color: #FF2525;
   font-size: 10px;
   height: 16px;
@@ -25554,104 +25602,70 @@ ion-navbar.toolbar {
   margin: -12px 0px 0px -12px;
 }
 
-.info {
-  display: inline-block;
-  float: right;
+page-tracking .account .item .name {
+  font-weight: bold !important;
 }
 
-.headerLable {
+page-tracking .account .item .model {
+  color: Grey;
+  font-size: 14px;
+}
+
+page-tracking .attendance .item {
+  padding-top: 10px;
+}
+
+page-tracking .attendance .item .title {
+  display: inline-block;
+  font-weight: bold;
+  color: Grey;
+}
+
+page-tracking .attendance .item .info {
+  display: inline-block;
+  float: right;
+  line-height: 20px;
+}
+
+page-tracking .tracking .stations .station {
+  text-align: center;
+}
+
+page-tracking .tracking .stations .station .name {
+  margin-top: 6px;
+  font-size: 20px;
+  color: Grey;
+}
+
+page-tracking .tracking .section .title {
+  text-align: center;
+  font-weight: bold;
+  color: Grey;
+  font-size: 30px;
+  margin: 0px 0px 20px 0px;
+}
+
+page-tracking .tracking .section .info {
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+  color: Grey;
+  margin-bottom: 10px;
+}
+
+page-tracking .tracking .section .info-sm {
+  font-size: 14px;
+  text-align: center;
+  font-weight: bold;
+  color: Grey;
+  margin-bottom: 20px;
+}
+
+page-tracking .headerLable {
   color: Grey;
   font-weight: bold;
 }
 
-.userphoto {
-  width: 10%;
-  height: 10%;
-  display: inline-block;
-}
-
-.loginDate {
-  color: Grey;
-}
-
-.name {
-  font-weight: bold !important;
-}
-
-.tracking {
-  margin-top: 20px;
-}
-
-.logout {
+page-tracking .logoutButton {
   background-color: #ffaf00;
-}
-
-page-message .myUsernameAndMessage {
-  display: inline-block;
-}
-
-page-message .myProfile {
-  display: inline-block;
-}
-
-page-message .otherProfile {
-  display: inline-block;
-}
-
-page-message .otherUsernameAndMessage {
-  display: inline-block;
-}
-
-page-message .my {
-  float: right;
-}
-
-page-message .myUsername, page-message .otherUsername {
-  color: #696969;
-  font-size: 10px;
-}
-
-page-message .myMessage, page-message .otherMessage {
-  color: black;
-  font-size: 14px;
-}
-
-page-message .myMessageTime, page-message .otherMessageTime {
-  color: #696969;
-  font-size: 10px;
-}
-
-page-message .input {
-  height: 30px;
-  background: transparent;
-  margin-top: 5px;
-  width: 90%;
-}
-
-page-message .button {
-  bottom: 5px;
-  left: 3px;
-  width: 25px;
-  height: 25px;
-  background: smrtGrey;
-  font-size: 15px;
-}
-
-page-notifications .topicTitle {
-  margin-top: 1.8rem;
-  display: inline-block;
-  font-weight: bold !important;
-  font-size: 15px;
-}
-
-page-notifications .topicDate {
-  display: inline-block;
-  float: right;
-  color: #696969;
-  font-size: 10px;
-}
-
-page-notifications .topicContent {
-  color: #696969;
-  font-size: 10px !important;
 }

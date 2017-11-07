@@ -25512,6 +25512,28 @@ ion-navbar.toolbar {
   min-height: calc(46px + constant(safe-area-inset-top));
 }
 
+station-icon .station-icon {
+  display: inline;
+  font-size: 16px;
+  color: white;
+  border: solid 2px lightGrey;
+  border-radius: 16px;
+}
+
+station-icon .station-icon .color-code {
+  padding: 0px 6px;
+}
+
+station-icon .station-icon .color-code:first-child {
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+
+station-icon .station-icon .color-code:last-child {
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
 .loginList {
   padding: 10px;
   position: relative;
@@ -25519,8 +25541,8 @@ ion-navbar.toolbar {
 }
 
 .loginBackground {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.6)), to(rgba(255, 255, 255, 0.6))), url("../../images/background.jpg");
-  background-image: linear-gradient(rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.6) 100%), url("../../images/background.jpg");
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.6)), to(rgba(255, 255, 255, 0.6))), url("../assets/img/background.jpg");
+  background-image: linear-gradient(rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.6) 100%), url("../assets/img/background.jpg");
   background-size: cover;
 }
 
@@ -25580,31 +25602,68 @@ page-tracking .nav-badge {
   margin: -12px 0px 0px -12px;
 }
 
-page-tracking .trackingtitle {
+page-tracking .account .item .name {
+  font-weight: bold !important;
+}
+
+page-tracking .account .item .model {
+  color: Grey;
+  font-size: 14px;
+}
+
+page-tracking .attendance .item {
+  padding-top: 10px;
+}
+
+page-tracking .attendance .item .title {
   display: inline-block;
   font-weight: bold;
+  color: Grey;
 }
 
-page-tracking .info {
+page-tracking .attendance .item .info {
   display: inline-block;
   float: right;
+  line-height: 20px;
 }
 
-page-tracking .trackingitem {
-  padding-top: 10px;
+page-tracking .tracking .stations .station {
+  text-align: center;
+}
+
+page-tracking .tracking .stations .station .name {
+  margin-top: 6px;
+  font-size: 20px;
+  color: Grey;
+}
+
+page-tracking .tracking .section .title {
+  text-align: center;
+  font-weight: bold;
+  color: Grey;
+  font-size: 30px;
+  margin: 0px 0px 20px 0px;
+}
+
+page-tracking .tracking .section .info {
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+  color: Grey;
+  margin-bottom: 10px;
+}
+
+page-tracking .tracking .section .info-sm {
+  font-size: 14px;
+  text-align: center;
+  font-weight: bold;
+  color: Grey;
+  margin-bottom: 20px;
 }
 
 page-tracking .headerLable {
   color: Grey;
   font-weight: bold;
-}
-
-page-tracking .loginDate {
-  color: Grey;
-}
-
-page-tracking .name {
-  font-weight: bold !important;
 }
 
 page-tracking .logoutButton {

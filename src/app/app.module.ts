@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from '@angular/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -8,6 +9,13 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { NotificationsPage} from '../pages/notifications/notifications';
 import { TrackingPage } from '../pages/tracking/tracking';
+import { ApiProvider } from '../providers/api/api';
+import { IonicStorageModule } from '@ionic/storage';
+
+import { PipesModule } from "../pipes/pipes.module";
+import { ComponentsModule } from '../components/components.module';
+
+import { IBeacon } from '@ionic-native/ibeacon';
 
 @NgModule({
   declarations: [
@@ -18,7 +26,11 @@ import { TrackingPage } from '../pages/tracking/tracking';
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(),
+    PipesModule,
+    ComponentsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -31,6 +43,8 @@ import { TrackingPage } from '../pages/tracking/tracking';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    ApiProvider,
+    IBeacon
   ]
 })
 export class AppModule {}

@@ -7,8 +7,9 @@ $smrtOrange: rgb(255,175,0);
   top: 56px;
 }
 .loginBackground{
-background-image: linear-gradient(rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.6) 100%), url('../../images/background.jpg');
-background-size:cover;
+  background-image: linear-gradient(rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.6) 100%), url('../assets/img/background.jpg');
+  // background-image: url('/assets/img/background.jpg');
+  background-size: cover;
 }
 .lable{
   color: DarkRed;

@@ -19,39 +19,82 @@
   </ion-navbar>
 </ion-header>
 
-
-<ion-content padding>
-  <ion-card class="accountinfo">
-    <ion-card-header class="headerLable">Account Details</ion-card-header>
-    <ion-item>
+<ion-content>
+  <ion-card class="account">
+    <ion-item class="item">
       <ion-avatar item-start>
-        <img src ={{this.url}}/>
+        <img [src]="device.account?device.account.avatar?device.account.avatar.url:'':''" />
       </ion-avatar>
-     <h2 class="name">{{this.username}}</h2>
-     <h2 class="loginDate">{{this.date}}</h2>
+     <h2 class="name">
+       {{ device.account?device.account.username:"No Name" }}
+     </h2>
+     <h2 class="model">
+       {{ device.model }}
+     </h2>
+    </ion-item>
+  </ion-card>
+  <ion-card class="attendance">
+    <ion-item class="item">
+      <ion-icon name="log-in" item-start large></ion-icon>
+      <h2 class="title">
+        {{ attendance.checkInStation?
+          attendance.checkInStation.name:
+          "Not check In" }}
+      </h2>
+      <h3 class="info">
+        {{ attendance.checkInDate?
+          attendance.checkInDate:
+          "no record" }}
+      </h3>
+    </ion-item>
+    <ion-item class="item">
+      <ion-icon name="log-out" item-start large></ion-icon>
+      <h2 class="title">
+        {{ attendance.checkOutStation?
+          attendance.checkOutStation.name:
+          "Not check Out" }}
+      </h2>
+      <h3 class="info">
+        {{ attendance.checkOutDate?
+          attendance.checkOutDate:
+          "no record" }}
+      </h3>
     </ion-item>
   </ion-card>
   <ion-card class="tracking">
-    <ion-card-header class="headerLable">Tracking</ion-card-header>
-    <ion-item class="trackingitem">
-      <ion-icon name="pin" item-start large></ion-icon>
-      <h2 class="trackingtitle">Location :</h2>
-      <h3 class="info"> Station 1, Interval 2</h3>
+    <ion-item class="stations">
+      <ion-grid>
+        <ion-row>
+          <ion-col *ngFor="let station of stations">
+            <div class="station">
+              <station-icon [station]="station"></station-icon>
+              <div class="name">
+                {{ station.name }}
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-item>
-    <ion-item class="trackingitem">
-      <ion-icon name="time" item-start large></ion-icon>
-      <h2 class="trackingtitle">Check-in Time :</h2>
-      <h3 class="info"> 16:00 P.M. </h3>
-    </ion-item>
-    <ion-item class="trackingitem">
-      <ion-icon name="speedometer" item-start large></ion-icon>
-      <h2 class="trackingtitle">Distance : </h2>
-      <h3 class="info">3m</h3>
-    </ion-item>
-    <ion-item class="trackingitem">
-      <ion-icon name="construct" item-start large></ion-icon>
-      <h2 class="trackingtitle">Device Model :</h2>
-      <h3 class="info">E285-395</h3>
+    <ion-item class="section">
+      <h2 class="title">
+        Section:
+        {{ section.name + (section.remark?" "+section.remark:"") }}
+      </h2>
+      <h3 class="info">
+        {{ device.account?
+          device.account.tracking?
+          (device.account.tracking.date|dateFormat:'YYYY MMM DD HH:mm:ss'):
+          "no record":
+          "no record" }}
+      </h3>
+      <h3 class="info-sm">
+        {{ device.account?
+          device.account.tracking?
+          (formatDate(device.account.tracking.date) + " ago"):
+          "no record":
+          "no record" }}
+      </h3>
     </ion-item>
   </ion-card>
   <ion-fab bottom right mini>

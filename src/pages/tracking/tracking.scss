@@ -7,26 +7,70 @@ page-tracking {
     padding: 3px 0px;
     margin: -12px 0px 0px -12px;
   }
-  .trackingtitle{
-    display:inline-block;
-    font-weight: bold;
+  .account {
+    .item {
+      .name{
+        font-weight: bold !important;
+      }
+      .model{
+        color: Grey;
+        font-size: 14px;
+      }
+    }
   }
-  .info{
-    display: inline-block;
-    float: right;
+  .attendance {
+    .item{
+      padding-top: 10px;
+      .title{
+        display:inline-block;
+        font-weight: bold;
+        color: Grey;
+      }
+      .info{
+        display: inline-block;
+        float: right;
+        line-height: 20px;
+      }
+    }
   }
-  .trackingitem{
-    padding-top: 10px;
+  .tracking {
+    .stations {
+      .station {
+        text-align: center;
+        .name {
+          margin-top: 6px;
+          font-size: 20px;
+          color: Grey;
+        }
+      }
+    }
+    .section {
+      .title {
+        text-align: center;
+        font-weight: bold;
+        color: Grey;
+        font-size: 30px;
+        margin: 0px 0px 20px 0px;
+      }
+      .info {
+        font-size: 20px;
+        text-align: center;
+        font-weight: bold;
+        color: Grey;
+        margin-bottom: 10px;
+      }
+      .info-sm {
+        font-size: 14px;
+        text-align: center;
+        font-weight: bold;
+        color: Grey;
+        margin-bottom: 20px;
+      }
+    }
   }
   .headerLable{
     color: Grey;
     font-weight: bold;
-  }
-  .loginDate{
-    color: Grey;
-  }
-  .name{
-    font-weight: bold !important;
   }
   .logoutButton{
     background-color: $smrtOrange;
