@@ -30,6 +30,9 @@
     },
     "ionic-plugin-keyboard": {
       "PACKAGE_NAME": "smrt.viatick.com"
+    },
+    "cordova-plugin-background-mode": {
+      "PACKAGE_NAME": "smrt.viatick.com"
     }
   },
   "dependent_plugins": {}

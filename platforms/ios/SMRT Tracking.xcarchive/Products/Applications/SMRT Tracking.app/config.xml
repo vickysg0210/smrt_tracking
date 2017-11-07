@@ -43,6 +43,9 @@
     <feature name="Keyboard">
         <param name="ios-package" onload="true" value="IonicKeyboard" />
     </feature>
+    <feature name="BackgroundMode">
+        <param name="ios-package" value="APPBackgroundMode" />
+    </feature>
     <name>SMRT Tracking</name>
     <description>SMRT track tracking</description>
     <author email="developer@viatick.com" href="https://www.viatick.com/">Viatick Development Team</author>

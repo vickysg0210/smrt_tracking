@@ -16,6 +16,7 @@ import { PipesModule } from "../pipes/pipes.module";
 import { ComponentsModule } from '../components/components.module';
 
 import { IBeacon } from '@ionic-native/ibeacon';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { IBeacon } from '@ionic-native/ibeacon';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ApiProvider,
-    IBeacon
+    IBeacon,
+    BackgroundMode
   ]
 })
 export class AppModule {}

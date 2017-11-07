@@ -10,6 +10,7 @@ import { HomePage } from '../home/home';
 import { ApiProvider } from "../../providers/api/api";
 import { ToastController } from 'ionic-angular';
 import { IBeacon } from '@ionic-native/ibeacon';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 import moment from 'moment';
 
@@ -38,7 +39,7 @@ export class TrackingPage{
   private beaconRegion: any;
   private counter: number;
 
-  constructor(public navCtrl: NavController, private api: ApiProvider, private toastCtrl: ToastController, public navParams: NavParams, private storage: Storage, private ibeacon: IBeacon, private ar : ApplicationRef) {
+  constructor(public navCtrl: NavController, private api: ApiProvider, private toastCtrl: ToastController, public navParams: NavParams, private storage: Storage, private ibeacon: IBeacon, private backgroundMode: BackgroundMode, private ar : ApplicationRef) {
     this.navCtrl = navCtrl;
     this.navParams = navParams;
     this.device = {
@@ -169,6 +170,7 @@ export class TrackingPage{
 
   private beaconScanning = function() {
     try {
+      this.backgroundMode.enable();
       this.ibeacon.requestAlwaysAuthorization();
       let delegate = this.ibeacon.Delegate();
       delegate.didRangeBeaconsInRegion().subscribe((data) => {
@@ -374,7 +376,7 @@ export class TrackingPage{
     this.api.sendRequest("BeaconRecord", -1, null, input, (res) => {
       console.log("BeaconRecord", res);
     }, (err) => {
-      this.presentToast(err);
+      // this.presentToast(err);
     });
   };
 
@@ -408,6 +410,7 @@ export class TrackingPage{
   private logout = function() : void {
     this.storage.remove('SMRT_DEVICE').then((val) => {
       try {
+        this.backgroundMode.disable();
         this.ibeacon.stopMonitoringForRegion(this.beaconRegion).then(() => {
           console.log('Native layer recieved the request to stop monitoring');
         }, (error) => {
@@ -423,6 +426,24 @@ export class TrackingPage{
       }
       this.navCtrl.pop();
     });
+  };
+
+  ionViewWillLeave() {
+    try {
+      this.backgroundMode.disable();
+      this.ibeacon.stopMonitoringForRegion(this.beaconRegion).then(() => {
+        console.log('Native layer recieved the request to stop monitoring');
+      }, (error) => {
+        console.error('Native layer failed to stop monitoring: ', error);
+      });
+      this.ibeacon.stopRangingBeaconsInRegion(this.beaconRegion).then(() => {
+        console.log('Native layer recieved the request to stop ranging');
+      }, (error) => {
+        console.error('Native layer failed to stop ranging: ', error);
+      });
+    } catch(e) {
+      console.log(e);
+    }
   }
 
   private checkLogin = function(success: any, fail: any) {

@@ -20,6 +20,7 @@
     "@angular/http": "4.4.3",
     "@angular/platform-browser": "4.4.3",
     "@angular/platform-browser-dynamic": "4.4.3",
+    "@ionic-native/background-mode": "^4.3.3",
     "@ionic-native/core": "4.3.0",
     "@ionic-native/ibeacon": "^4.3.3",
     "@ionic-native/keyboard": "^4.3.2",
@@ -29,6 +30,7 @@
     "com.unarin.cordova.beacon": "~3.5.2",
     "cordova-android": "6.3.0",
     "cordova-ios": "4.5.3",
+    "cordova-plugin-background-mode": "^0.7.2",
     "cordova-plugin-device": "^1.1.4",
     "cordova-plugin-ibeacon": "^3.5.2",
     "cordova-plugin-ionic-webview": "^1.1.16",
@@ -58,7 +60,8 @@
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-sqlite-storage": {},
-      "com.unarin.cordova.beacon": {}
+      "com.unarin.cordova.beacon": {},
+      "cordova-plugin-background-mode": {}
     },
     "platforms": [
       "ios",
