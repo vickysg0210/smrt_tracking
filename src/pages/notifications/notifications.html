@@ -2,40 +2,31 @@
   <ion-navbar>
     <ion-title>Notifications</ion-title>
     <ion-buttons end>
-    <button ion-button item-end (click) = "clearAllMessages()">Clear All</button>
+    <button ion-button item-end (click)="clearAllMessages()">Clear All</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
   <ion-list>
-    <ion-item class="topic" *ngFor="let topic of topics; index as i" (click)="processReply(i)">
-      <ion-avatar item-start >
-        <img src= "{{topic.author.avatar.url}}">
+    <ion-item class="topic" *ngFor="let topic of topics" (click)="processReply(topic.topicId)">
+      <ion-avatar item-start>
+        <img [src]="topic.avatar">
       </ion-avatar>
       <h2 class="topicTitle">
         {{topic.title}}
-        <span class="date">{{ topic.date }}</span>
+        <span class="date">{{ topic.date|dateFormat:'MMM DD HH:mm:ss' }}</span>
       </h2>
-      <ion-note class="content">{{topic.author.username}} : {{topic.content}}</ion-note>
+      <ion-note class="content">{{topic.author}} : {{topic.content}}</ion-note>
       <p class="replyMessage">
         {{ topic.message }}
       </p>
     </ion-item>
   </ion-list>
 </ion-content>
-<ion-footer *ngIf = "this.chosenTopicId">
-
+<ion-footer *ngIf="messageForm.showInput">
   <ion-toolbar>
     <form (submit)="sendMessage()">
-      <!-- <ion-item no-lines>
-      <ion-icon item-start name="chatbubbles"></ion-icon>
-      <input class="message-input" dir="auto" placeholder="Type your message" autocomplete ="on" autocorrect="on" spellcheck=true />
-    </ion-item> -->
-    <ion-searchbar placeholder="Type your message"
-    [(ngModel)]="message" name="message" >
-  </ion-searchbar>
-</form>
-<!-- [showCancelButton]="shouldShowCancel" -->
-<!--    (ionCancel)="onCancel($event)"-->
-</ion-toolbar>
+      <ion-searchbar placeholder="Type your message" [(ngModel)]="messageForm.message" name="message" ></ion-searchbar>
+    </form>
+  </ion-toolbar>
 </ion-footer>

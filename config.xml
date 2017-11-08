@@ -87,4 +87,7 @@
     <plugin name="cordova-sqlite-storage" spec="^2.1.0" />
     <plugin name="com.unarin.cordova.beacon" spec="~3.5.2" />
     <plugin name="cordova-plugin-background-mode" spec="^0.7.2" />
+    <plugin name="phonegap-plugin-push" spec="^2.1.0">
+        <variable name="FCM_VERSION" value="11.0.1" />
+    </plugin>
 </widget>

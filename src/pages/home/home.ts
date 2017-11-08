@@ -32,9 +32,15 @@ export class HomePage {
     this.checkLogin(() => {
       this.navCtrl.push(this.trackingPage);
     }, () => {
-      // NOTHING
+      this.clearNotifications();
     });
   }
+
+  private clearNotifications = function() {
+    this.storage.remove('SMRT_NOTIFICATIONS').then(() => {
+      console.log("SMRT_NOTIFICATIONS", "remove");
+    });
+  };
 
   private presentToast = function(message: string) {
     let toast = this.toastCtrl.create({
@@ -78,6 +84,8 @@ export class HomePage {
         } else {
           fail();
         }
+      } else {
+        fail();
       }
     });
   };

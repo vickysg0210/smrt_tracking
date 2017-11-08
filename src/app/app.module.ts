@@ -17,6 +17,7 @@ import { ComponentsModule } from '../components/components.module';
 
 import { IBeacon } from '@ionic-native/ibeacon';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import { Push } from '@ionic-native/push';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { BackgroundMode } from '@ionic-native/background-mode';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ApiProvider,
     IBeacon,
-    BackgroundMode
+    BackgroundMode,
+    Push
   ]
 })
 export class AppModule {}

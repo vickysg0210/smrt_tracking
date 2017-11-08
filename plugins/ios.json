@@ -33,6 +33,9 @@
     },
     "cordova-plugin-background-mode": {
       "PACKAGE_NAME": "smrt.viatick.com"
+    },
+    "phonegap-plugin-push": {
+      "PACKAGE_NAME": "smrt.viatick.com"
     }
   },
   "dependent_plugins": {}

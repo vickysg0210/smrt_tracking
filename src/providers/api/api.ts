@@ -38,6 +38,11 @@ export class ApiProvider {
         method: "POST",
         secret: "00tracking00",
         link: "/service/bms"
+      }, {
+        name: "DeviceToken",
+        method: "PUT",
+        secret: "00notification00",
+        link: "/service/asset/register"
       }]
     };
   }

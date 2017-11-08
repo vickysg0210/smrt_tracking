@@ -1,16 +1,14 @@
 import { Component, ApplicationRef } from '@angular/core';
-import { Storage } from '@ionic/storage';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { NotificationsPage } from '../notifications/notifications';
 import { DeviceInterface } from '../../model/DeviceInterface';
-import { AttendanceInterface } from "../../model/AttendanceInterface";
 import { StationInterface } from "../../model/StationInterface";
-import { SectionInterface } from "../../model/SectionInterface";
-import { HomePage } from '../home/home';
 import { ApiProvider } from "../../providers/api/api";
 import { ToastController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 import { IBeacon } from '@ionic-native/ibeacon';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
 
 import moment from 'moment';
 
@@ -28,134 +26,51 @@ import moment from 'moment';
   templateUrl: 'tracking.html',
 })
 export class TrackingPage{
-  private homePage = HomePage;
   private notificationsPage = NotificationsPage;
   private device : DeviceInterface;
 
-  private attendance: AttendanceInterface;
-  private section: SectionInterface;
+  // private attendance: AttendanceInterface;
+  // private section: SectionInterface;
   private stations: Array<StationInterface>;
 
   private beaconRegion: any;
   private counter: number;
+  private messageCount: number;
 
-  constructor(public navCtrl: NavController, private api: ApiProvider, private toastCtrl: ToastController, public navParams: NavParams, private storage: Storage, private ibeacon: IBeacon, private backgroundMode: BackgroundMode, private ar : ApplicationRef) {
+  private page: {
+    avatarUrl: string,
+    accountUsername: string,
+    deviceModel: string,
+    checkInStation: string,
+    checkInDate: string,
+    checkOutStation: string,
+    checkOutDate: string,
+    trackingType: string,
+    sectionName: string,
+    trackingDate: string,
+    trackingAgo: string
+  };
+
+  constructor(public navCtrl: NavController, private api: ApiProvider, private toastCtrl: ToastController, public navParams: NavParams, private storage: Storage, private ibeacon: IBeacon, private backgroundMode: BackgroundMode, private ar : ApplicationRef, private push: Push) {
     this.navCtrl = navCtrl;
     this.navParams = navParams;
-    this.device = {
-      deviceId: 0,
-      name: "",
-      number: "",
-      model: "",
-      account: {
-        accountID : 0,
-        username : "",
-        avatar: {
-          url: ""
-        },
-        type: "",
-        active: false,
-        attendance: {
-          attendanceId: 0,
-          checkInDate: "",
-          checkInStation: {
-            stationId: 0,
-            name: "",
-            code: "",
-            color: [],
-            date: ""
-          },
-          checkOutDate: "",
-          checkOutStation: {
-            stationId: 0,
-            name: "",
-            code: "",
-            color: [],
-            date: ""
-          },
-          date: ""
-        },
-        tracking: {
-          trackingId: 0,
-          primaryNode: {
-            nodeId: 0,
-            name: "",
-            point: 0,
-            date : ""
-          },
-          secondaryNode: {
-            nodeId: 0,
-            name: "",
-            point: 0,
-            date : ""
-          },
-          primaryDistance: 0,
-          secondaryDistance: 0,
-          section: {
-            sectionId: 0,
-            name: "",
-            startNode: {
-              nodeId: 0,
-              name: "",
-              point: 0,
-              date : ""
-            },
-            endNode: {
-              nodeId: 0,
-              name: "",
-              point: 0,
-              date : ""
-            },
-            remark: "",
-            date : ""
-          },
-          stations: [],
-          date : ""
-        },
-        date : ""
-      },
-      date : ""
+    this.page = {
+      avatarUrl: "",
+      accountUsername: "No Name",
+      deviceModel: "",
+      checkInStation: "Not check In",
+      checkInDate: "no record",
+      checkOutStation: "Not check Out",
+      checkOutDate: "no record",
+      trackingType: "",
+      sectionName: "",
+      trackingDate: "no record",
+      trackingAgo: "no record"
     };
-    this.attendance = {
-      attendanceId: 0,
-      checkInDate: "",
-      checkInStation: {
-        stationId: 0,
-        name: "",
-        code: "",
-        color: [],
-        date: ""
-      },
-      checkOutDate: "",
-      checkOutStation: {
-        stationId: 0,
-        name: "",
-        code: "",
-        color: [],
-        date: ""
-      },
-      date: ""
-    };
-    this.section = {
-      sectionId: 0,
-      name: "",
-      startNode: {
-        nodeId: 0,
-        name: "",
-        point: 0,
-        date : ""
-      },
-      endNode: {
-        nodeId: 0,
-        name: "",
-        point: 0,
-        date : ""
-      },
-      remark: "",
-      date : ""
-    };
+    this.device = null;
     this.stations = [];
     this.counter = 5;
+    this.messageCount = 0;
   }
 
   ionViewDidLoad() {
@@ -163,10 +78,97 @@ export class TrackingPage{
       this.processDeviceData();
       this.beaconScanning();
       this.getBeaconRegion();
+      this.pushInit();
     }, () => {
       this.logout();
     });
   }
+
+  private pushInit = function() {
+    try {
+      this.push.hasPermission().then((res: any) => {
+        if (res.isEnabled) {
+          console.log('We have permission to send push notifications');
+        } else {
+          console.log('We do not have permission to send push notifications');
+        }
+      });
+      const options: PushOptions = {
+        android: {},
+        ios: {
+          alert: true,
+          badge: true,
+          sound: true
+        },
+        windows: {},
+        browser: {
+          pushServiceURL: 'http://push.api.phonegap.com/v1/push'
+        }
+      };
+      const pushObject: PushObject = this.push.init(options);
+      pushObject.on('notification').subscribe((notification: any) => {
+        // console.log('Received a notification', JSON.stringify(notification));
+        this.storeNotification(notification);
+      });
+      pushObject.on('registration').subscribe((registration: any) => {
+        // console.log('Device registered', JSON.stringify(registration));
+        this.updatePushToken(registration);
+      });
+      pushObject.on('error').subscribe((error) => {
+        console.error('Error with Push plugin', error);
+      });
+    } catch(e) {
+      console.log(e);
+    }
+  };
+
+  private loadNotifications = function() {
+    this.storage.get('SMRT_NOTIFICATIONS').then((val) => {
+      console.log('SMRT_NOTIFICATIONS', val);
+      if(val) {
+        this.messageCount = val.length;
+      } else {
+        this.messageCount = 0;
+      }
+    });
+  };
+
+  private storeNotification = function(data) {
+    let topic = {
+      topicId: data.additionalData.topicId,
+      title: data.title,
+      content: data.message,
+      needReply: data.additionalData.needReply,
+      acceptText: data.additionalData.acceptText,
+      rejectText: data.additionalData.rejectText,
+      author: data.additionalData.author,
+      avatar: data.additionalData.avatar
+    };
+    this.storage.get('SMRT_NOTIFICATIONS').then((val) => {
+      console.log('SMRT_NOTIFICATIONS', val);
+      if(val) {
+        val.push(topic);
+        this.messageCount = val.length + 1;
+        this.storage.set('SMRT_NOTIFICATIONS', val);
+      } else {
+        let notifications = [topic];
+        this.messageCount = 1;
+        this.storage.set('SMRT_NOTIFICATIONS', notifications);
+      }
+    });
+  };
+
+  private updatePushToken = function(registration) {
+    let input = {
+      secret: registration.registrationType,
+      token: registration.registrationId
+    };
+    this.api.sendRequest("DeviceToken", this.device.deviceId, null, input, (res) => {
+      console.log("this.deviceToken", res);
+    }, (err) => {
+      this.presentToast(err);
+    });
+  };
 
   private beaconScanning = function() {
     try {
@@ -176,6 +178,7 @@ export class TrackingPage{
       delegate.didRangeBeaconsInRegion().subscribe((data) => {
         // console.log('didRangeBeaconsInRegion: ', JSON.stringify(data));
         this.sendBeaconRecords(data.beacons);
+        // this.ar.tick();
       }, (error) => {
         console.error();
       });
@@ -203,121 +206,73 @@ export class TrackingPage{
 
   private processDeviceData = function() {
     if(this.device.account) {
-      if(this.device.account.attendance) {
-        this.attendance = this.device.account.attendance;
-        console.log("this.attendance", "updated");
+      this.page.deviceModel = this.device.model;
+      this.page.accountUsername = this.device.account.username;
+      if(this.device.account.avatar) {
+        this.page.avatarUrl = this.device.account.avatar.url;
       } else {
-        this.attendance = {
-          attendanceId: 0,
-          checkInDate: "",
-          checkInStation: {
-            stationId: 0,
-            name: "",
-            code: "",
-            color: [],
-            date: ""
-          },
-          checkOutDate: "",
-          checkOutStation: {
-            stationId: 0,
-            name: "",
-            code: "",
-            color: [],
-            date: ""
-          },
-          date: ""
-        };
+        this.page.avatarUrl = "";
+      }
+      if(this.device.account.attendance) {
+        if(this.device.account.attendance.checkInStation) {
+          this.page.checkInStation = this.device.account.attendance.checkInStation.name;
+        } else {
+          this.page.checkInStation = "Not check In";
+        }
+        if(this.device.account.attendance.checkInDate) {
+          this.page.checkInDate = this.device.account.attendance.checkInDate;
+        } else {
+          this.page.checkInDate = "no record";
+        }
+        if(this.device.account.attendance.checkOutStation) {
+          this.page.checkOutStation = this.device.account.attendance.checkOutStation.name;
+        } else {
+          this.page.checkOutStation = "Not check Out";
+        }
+        if(this.device.account.attendance.checkOutDate) {
+          this.page.checkOutDate = this.device.account.attendance.checkOutDate;
+        } else {
+          this.page.checkOutDate = "no record";
+        }
+      } else {
+        this.page.checkInStation = "Not check In";
+        this.page.checkInDate = "no record";
+        this.page.checkOutStation = "Not check Out";
+        this.page.checkOutDate = "no record";
       }
       if(this.device.account.tracking) {
+        this.page.trackingType = this.device.account.tracking.type;
         if(this.device.account.tracking.section) {
-          this.section = this.device.account.tracking.section;
-          console.log("this.section", "updated");
+          this.page.sectionName = this.device.account.tracking.section.name;
         } else {
-          this.section = {
-            sectionId: 0,
-            name: "",
-            startNode: {
-              nodeId: 0,
-              name: "",
-              point: 0,
-              date : ""
-            },
-            endNode: {
-              nodeId: 0,
-              name: "",
-              point: 0,
-              date : ""
-            },
-            remark: "",
-            date : ""
-          };
+          this.page.sectionName = "";
         }
+        this.page.trackingDate = this.device.account.tracking.date;
+        this.page.trackingAgo = this.formatDate(this.device.account.tracking.date);
         if(this.device.account.tracking.stations) {
           this.stations = this.device.account.tracking.stations;
-          console.log("this.stations", "updated");
         } else {
           this.stations = [];
         }
       } else {
-        this.section = {
-          sectionId: 0,
-          name: "",
-          startNode: {
-            nodeId: 0,
-            name: "",
-            point: 0,
-            date : ""
-          },
-          endNode: {
-            nodeId: 0,
-            name: "",
-            point: 0,
-            date : ""
-          },
-          remark: "",
-          date : ""
-        };
+        this.page.trackingType = "";
+        this.page.sectionName = "";
+        this.page.trackingDate = "no record";
+        this.page.trackingAgo = "no record";
         this.stations = [];
       }
     } else {
-      this.attendance = {
-        attendanceId: 0,
-        checkInDate: "",
-        checkInStation: {
-          stationId: 0,
-          name: "",
-          code: "",
-          color: [],
-          date: ""
-        },
-        checkOutDate: "",
-        checkOutStation: {
-          stationId: 0,
-          name: "",
-          code: "",
-          color: [],
-          date: ""
-        },
-        date: ""
-      };
-      this.section = {
-        sectionId: 0,
-        name: "",
-        startNode: {
-          nodeId: 0,
-          name: "",
-          point: 0,
-          date : ""
-        },
-        endNode: {
-          nodeId: 0,
-          name: "",
-          point: 0,
-          date : ""
-        },
-        remark: "",
-        date : ""
-      };
+      this.page.avatarUrl = "";
+      this.page.accountUsername = "No Name";
+      this.page.deviceModel = "";
+      this.page.checkInStation = "Not check In";
+      this.page.checkInDate = "no record";
+      this.page.checkOutStation = "Not check Out";
+      this.page.checkOutDate = "no record";
+      this.page.trackingType = "";
+      this.page.sectionName = "";
+      this.page.trackingDate = "no record";
+      this.page.trackingAgo = "no record";
       this.stations = [];
     }
     this.ar.tick();
@@ -356,6 +311,7 @@ export class TrackingPage{
     // console.log("beacons", JSON.stringify(beacons));
     if(this.counter == 5) {
       this.counter = 0;
+      this.loadNotifications();
       this.syncMobile();
     }
     this.counter += 1;
@@ -378,6 +334,7 @@ export class TrackingPage{
     }, (err) => {
       // this.presentToast(err);
     });
+    this.processDeviceData();
   };
 
   private syncMobile = function() {
@@ -389,7 +346,7 @@ export class TrackingPage{
       if(res.account) {
         this.device = res;
         // this.storage.set('SMRT_DEVICE', this.device);
-        this.processDeviceData();
+        // this.processDeviceData();
       } else {
         this.presentToast("This device has not link to account!");
         this.logout();
@@ -400,12 +357,10 @@ export class TrackingPage{
   };
 
   private goNotificationsPage = function(): void{
-    // TODO
-    // console.log("Ojbect: "+topic);
-    // this.navCtrl.push(this.notificationsPage, {
-    //   username : this.username
-    // })
-  }
+    if(this.messageCount) {
+      this.navCtrl.push(this.notificationsPage);
+    }
+  };
 
   private logout = function() : void {
     this.storage.remove('SMRT_DEVICE').then((val) => {

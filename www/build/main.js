@@ -1,18 +1,207 @@
 webpackJsonp([2],{
 
+/***/ 104:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NotificationsPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(48);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var NotificationsPage = (function () {
+    function NotificationsPage(navCtrl, navParams, platform, storage, actionsheetCtrl, toastCtrl) {
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.platform = platform;
+        this.storage = storage;
+        this.actionsheetCtrl = actionsheetCtrl;
+        this.toastCtrl = toastCtrl;
+        this.loadNotifications = function () {
+            var _this = this;
+            this.storage.get('SMRT_NOTIFICATIONS').then(function (val) {
+                console.log('SMRT_NOTIFICATIONS', val);
+                if (val) {
+                    _this.topics = val;
+                }
+                else {
+                    _this.topics = [{
+                            topicId: 1,
+                            title: "Notification to Khoa",
+                            content: "Where are you Khoa?",
+                            needReply: false,
+                            acceptText: "Home",
+                            rejectText: "Toilet",
+                            author: "BIE YAQING",
+                            avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
+                            date: "2017-11-03T14:00:00+8:00"
+                        }, {
+                            topicId: 2,
+                            title: "Notification to Khoa",
+                            content: "Are you receiving?",
+                            needReply: false,
+                            acceptText: "Yes",
+                            rejectText: "No",
+                            author: "BIE YAQING",
+                            avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
+                            date: "2017-11-03T14:00:00+8:00"
+                        }, {
+                            topicId: 3,
+                            title: "Notification to Khoa",
+                            content: "Tell me where are you!",
+                            needReply: true,
+                            acceptText: "Yes",
+                            rejectText: "No",
+                            author: "BIE YAQING",
+                            avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
+                            date: "2017-11-03T14:00:00+8:00"
+                        }];
+                }
+            });
+        };
+        this.saveNotifications = function () {
+            this.storage.set('SMRT_NOTIFICATIONS', this.topics);
+        };
+        this.presentToast = function (message) {
+            var toast = this.toastCtrl.create({
+                message: message,
+                duration: 3000,
+                position: 'top'
+            });
+            toast.present();
+        };
+        this.openYNMenu = function (acceptText, rejectText) {
+            var _this = this;
+            var actionSheet = this.actionsheetCtrl.create({
+                title: 'Canned Reply',
+                cssClass: 'action-sheets-basic-page',
+                buttons: [{
+                        text: acceptText,
+                        role: 'destructive',
+                        icon: !this.platform.is('ios') ? 'trash' : null,
+                        handler: function () {
+                            for (var o in _this.topics) {
+                                var topic = _this.topics[o];
+                                if (topic.topicId == _this.chosenTopicId) {
+                                    _this.topics[o].message = "Replied: " + acceptText;
+                                    _this.chosenTopicId = 0;
+                                    _this.saveNotifications();
+                                    break;
+                                }
+                            }
+                        }
+                    }, {
+                        text: rejectText,
+                        role: 'destructive',
+                        icon: !this.platform.is('ios') ? 'trash' : null,
+                        handler: function () {
+                            for (var o in _this.topics) {
+                                var topic = _this.topics[o];
+                                if (topic.topicId == _this.chosenTopicId) {
+                                    _this.topics[o].message = "Replied: " + rejectText;
+                                    _this.chosenTopicId = 0;
+                                    _this.saveNotifications();
+                                    break;
+                                }
+                            }
+                        }
+                    }, {
+                        text: 'Cancel',
+                        role: 'cancel',
+                        icon: !this.platform.is('ios') ? 'close' : null,
+                        handler: function () {
+                            console.log('Cancel clicked');
+                        }
+                    }]
+            });
+            actionSheet.present();
+        };
+        this.sendMessage = function () {
+            for (var o in this.topics) {
+                var topic = this.topics[o];
+                if (topic.topicId == this.chosenTopicId) {
+                    this.topics[o].message = "Replied: " + this.messageForm.message;
+                    this.saveNotifications();
+                    this.chosenTopicId = 0;
+                    this.messageForm.message = "";
+                    this.messageForm.showInput = false;
+                    break;
+                }
+            }
+        };
+        this.processReply = function (idx) {
+            this.chosenTopicId = idx;
+            console.log(this.chosenTopicId);
+            for (var o in this.topics) {
+                var topic = this.topics[o];
+                if (topic.topicId == this.chosenTopicId) {
+                    if (!topic.message) {
+                        if (topic.needReply) {
+                            this.messageForm.showInput = true;
+                        }
+                        else {
+                            this.openYNMenu(topic.acceptText, topic.rejectText);
+                        }
+                    }
+                    break;
+                }
+            }
+        };
+        this.clearAllMessages = function () {
+            var _this = this;
+            this.storage.remove('SMRT_NOTIFICATIONS').then(function (val) {
+                _this.topics = [];
+            });
+        };
+        this.chosenTopicId = 0;
+        this.messageForm = {
+            message: "",
+            showInput: false
+        };
+        this.topics = [];
+    }
+    NotificationsPage.prototype.ionViewDidLoad = function () {
+        this.loadNotifications();
+    };
+    return NotificationsPage;
+}());
+NotificationsPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-notifications',template:/*ion-inline-start:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Notifications</ion-title>\n    <ion-buttons end>\n    <button ion-button item-end (click)="clearAllMessages()">Clear All</button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n<ion-content padding>\n  <ion-list>\n    <ion-item class="topic" *ngFor="let topic of topics" (click)="processReply(topic.topicId)">\n      <ion-avatar item-start>\n        <img [src]="topic.avatar">\n      </ion-avatar>\n      <h2 class="topicTitle">\n        {{topic.title}}\n        <span class="date">{{ topic.date|dateFormat:\'MMM DD HH:mm:ss\' }}</span>\n      </h2>\n      <ion-note class="content">{{topic.author}} : {{topic.content}}</ion-note>\n      <p class="replyMessage">\n        {{ topic.message }}\n      </p>\n    </ion-item>\n  </ion-list>\n</ion-content>\n<ion-footer *ngIf="messageForm.showInput">\n  <ion-toolbar>\n    <form (submit)="sendMessage()">\n      <ion-searchbar placeholder="Type your message" [(ngModel)]="messageForm.message" name="message" ></ion-searchbar>\n    </form>\n  </ion-toolbar>\n</ion-footer>\n'/*ion-inline-end:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/,
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_storage__["b" /* Storage */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* ToastController */]])
+], NotificationsPage);
+
+//# sourceMappingURL=notifications.js.map
+
+/***/ }),
+
 /***/ 105:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TrackingPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_storage__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__notifications_notifications__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__home_home__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_api_api__ = __webpack_require__(82);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_ibeacon__ = __webpack_require__(158);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_background_mode__ = __webpack_require__(160);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__notifications_notifications__ = __webpack_require__(104);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_api_api__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_storage__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_ibeacon__ = __webpack_require__(157);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_background_mode__ = __webpack_require__(159);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_push__ = __webpack_require__(160);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_moment__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_moment__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -41,7 +230,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * Ionic pages and navigation.
  */
 var TrackingPage = (function () {
-    function TrackingPage(navCtrl, api, toastCtrl, navParams, storage, ibeacon, backgroundMode, ar) {
+    function TrackingPage(navCtrl, api, toastCtrl, navParams, storage, ibeacon, backgroundMode, ar, push) {
         this.navCtrl = navCtrl;
         this.api = api;
         this.toastCtrl = toastCtrl;
@@ -50,8 +239,98 @@ var TrackingPage = (function () {
         this.ibeacon = ibeacon;
         this.backgroundMode = backgroundMode;
         this.ar = ar;
-        this.homePage = __WEBPACK_IMPORTED_MODULE_4__home_home__["a" /* HomePage */];
-        this.notificationsPage = __WEBPACK_IMPORTED_MODULE_3__notifications_notifications__["a" /* NotificationsPage */];
+        this.push = push;
+        this.notificationsPage = __WEBPACK_IMPORTED_MODULE_2__notifications_notifications__["a" /* NotificationsPage */];
+        this.pushInit = function () {
+            var _this = this;
+            try {
+                this.push.hasPermission().then(function (res) {
+                    if (res.isEnabled) {
+                        console.log('We have permission to send push notifications');
+                    }
+                    else {
+                        console.log('We do not have permission to send push notifications');
+                    }
+                });
+                var options = {
+                    android: {},
+                    ios: {
+                        alert: true,
+                        badge: true,
+                        sound: true
+                    },
+                    windows: {},
+                    browser: {
+                        pushServiceURL: 'http://push.api.phonegap.com/v1/push'
+                    }
+                };
+                var pushObject = this.push.init(options);
+                pushObject.on('notification').subscribe(function (notification) {
+                    // console.log('Received a notification', JSON.stringify(notification));
+                    _this.storeNotification(notification);
+                });
+                pushObject.on('registration').subscribe(function (registration) {
+                    // console.log('Device registered', JSON.stringify(registration));
+                    _this.updatePushToken(registration);
+                });
+                pushObject.on('error').subscribe(function (error) {
+                    console.error('Error with Push plugin', error);
+                });
+            }
+            catch (e) {
+                console.log(e);
+            }
+        };
+        this.loadNotifications = function () {
+            var _this = this;
+            this.storage.get('SMRT_NOTIFICATIONS').then(function (val) {
+                console.log('SMRT_NOTIFICATIONS', val);
+                if (val) {
+                    _this.messageCount = val.length;
+                }
+                else {
+                    _this.messageCount = 0;
+                }
+            });
+        };
+        this.storeNotification = function (data) {
+            var _this = this;
+            var topic = {
+                topicId: data.additionalData.topicId,
+                title: data.title,
+                content: data.message,
+                needReply: data.additionalData.needReply,
+                acceptText: data.additionalData.acceptText,
+                rejectText: data.additionalData.rejectText,
+                author: data.additionalData.author,
+                avatar: data.additionalData.avatar
+            };
+            this.storage.get('SMRT_NOTIFICATIONS').then(function (val) {
+                console.log('SMRT_NOTIFICATIONS', val);
+                if (val) {
+                    val.push(topic);
+                    _this.messageCount = val.length + 1;
+                    _this.storage.set('SMRT_NOTIFICATIONS', val);
+                }
+                else {
+                    var notifications = [topic];
+                    _this.messageCount = 1;
+                    _this.storage.set('SMRT_NOTIFICATIONS', notifications);
+                }
+            });
+        };
+        this.updatePushToken = function (registration) {
+            var _this = this;
+            var input = {
+                secret: registration.registrationType,
+                token: registration.registrationId
+            };
+            this.api.sendRequest("DeviceToken", this.device.deviceId, null, input, function (res) {
+                console.log("this.deviceToken", res);
+            }, function (err) {
+                _this.presentToast(err);
+            });
+        };
         this.beaconScanning = function () {
             var _this = this;
             try {
@@ -61,6 +340,7 @@ var TrackingPage = (function () {
                 delegate.didRangeBeaconsInRegion().subscribe(function (data) {
                     // console.log('didRangeBeaconsInRegion: ', JSON.stringify(data));
                     _this.sendBeaconRecords(data.beacons);
+                    // this.ar.tick();
                 }, function (error) {
                     console.error();
                 });
@@ -87,126 +367,83 @@ var TrackingPage = (function () {
         };
         this.processDeviceData = function () {
             if (this.device.account) {
-                if (this.device.account.attendance) {
-                    this.attendance = this.device.account.attendance;
-                    console.log("this.attendance", "updated");
+                this.page.deviceModel = this.device.model;
+                this.page.accountUsername = this.device.account.username;
+                if (this.device.account.avatar) {
+                    this.page.avatarUrl = this.device.account.avatar.url;
                 }
                 else {
-                    this.attendance = {
-                        attendanceId: 0,
-                        checkInDate: "",
-                        checkInStation: {
-                            stationId: 0,
-                            name: "",
-                            code: "",
-                            color: [],
-                            date: ""
-                        },
-                        checkOutDate: "",
-                        checkOutStation: {
-                            stationId: 0,
-                            name: "",
-                            code: "",
-                            color: [],
-                            date: ""
-                        },
-                        date: ""
-                    };
+                    this.page.avatarUrl = "";
                 }
-                if (this.device.account.tracking) {
-                    if (this.device.account.tracking.section) {
-                        this.section = this.device.account.tracking.section;
-                        console.log("this.section", "updated");
+                if (this.device.account.attendance) {
+                    if (this.device.account.attendance.checkInStation) {
+                        this.page.checkInStation = this.device.account.attendance.checkInStation.name;
                     }
                     else {
-                        this.section = {
-                            sectionId: 0,
-                            name: "",
-                            startNode: {
-                                nodeId: 0,
-                                name: "",
-                                point: 0,
-                                date: ""
-                            },
-                            endNode: {
-                                nodeId: 0,
-                                name: "",
-                                point: 0,
-                                date: ""
-                            },
-                            remark: "",
-                            date: ""
-                        };
+                        this.page.checkInStation = "Not check In";
                     }
+                    if (this.device.account.attendance.checkInDate) {
+                        this.page.checkInDate = this.device.account.attendance.checkInDate;
+                    }
+                    else {
+                        this.page.checkInDate = "no record";
+                    }
+                    if (this.device.account.attendance.checkOutStation) {
+                        this.page.checkOutStation = this.device.account.attendance.checkOutStation.name;
+                    }
+                    else {
+                        this.page.checkOutStation = "Not check Out";
+                    }
+                    if (this.device.account.attendance.checkOutDate) {
+                        this.page.checkOutDate = this.device.account.attendance.checkOutDate;
+                    }
+                    else {
+                        this.page.checkOutDate = "no record";
+                    }
+                }
+                else {
+                    this.page.checkInStation = "Not check In";
+                    this.page.checkInDate = "no record";
+                    this.page.checkOutStation = "Not check Out";
+                    this.page.checkOutDate = "no record";
+                }
+                if (this.device.account.tracking) {
+                    this.page.trackingType = this.device.account.tracking.type;
+                    if (this.device.account.tracking.section) {
+                        this.page.sectionName = this.device.account.tracking.section.name;
+                    }
+                    else {
+                        this.page.sectionName = "";
+                    }
+                    this.page.trackingDate = this.device.account.tracking.date;
+                    this.page.trackingAgo = this.formatDate(this.device.account.tracking.date);
                     if (this.device.account.tracking.stations) {
                         this.stations = this.device.account.tracking.stations;
-                        console.log("this.stations", "updated");
                     }
                     else {
                         this.stations = [];
                     }
                 }
                 else {
-                    this.section = {
-                        sectionId: 0,
-                        name: "",
-                        startNode: {
-                            nodeId: 0,
-                            name: "",
-                            point: 0,
-                            date: ""
-                        },
-                        endNode: {
-                            nodeId: 0,
-                            name: "",
-                            point: 0,
-                            date: ""
-                        },
-                        remark: "",
-                        date: ""
-                    };
+                    this.page.trackingType = "";
+                    this.page.sectionName = "";
+                    this.page.trackingDate = "no record";
+                    this.page.trackingAgo = "no record";
                     this.stations = [];
                 }
             }
             else {
-                this.attendance = {
-                    attendanceId: 0,
-                    checkInDate: "",
-                    checkInStation: {
-                        stationId: 0,
-                        name: "",
-                        code: "",
-                        color: [],
-                        date: ""
-                    },
-                    checkOutDate: "",
-                    checkOutStation: {
-                        stationId: 0,
-                        name: "",
-                        code: "",
-                        color: [],
-                        date: ""
-                    },
-                    date: ""
-                };
-                this.section = {
-                    sectionId: 0,
-                    name: "",
-                    startNode: {
-                        nodeId: 0,
-                        name: "",
-                        point: 0,
-                        date: ""
-                    },
-                    endNode: {
-                        nodeId: 0,
-                        name: "",
-                        point: 0,
-                        date: ""
-                    },
-                    remark: "",
-                    date: ""
-                };
+                this.page.avatarUrl = "";
+                this.page.accountUsername = "No Name";
+                this.page.deviceModel = "";
+                this.page.checkInStation = "Not check In";
+                this.page.checkInDate = "no record";
+                this.page.checkOutStation = "Not check Out";
+                this.page.checkOutDate = "no record";
+                this.page.trackingType = "";
+                this.page.sectionName = "";
+                this.page.trackingDate = "no record";
+                this.page.trackingAgo = "no record";
                 this.stations = [];
             }
             this.ar.tick();
@@ -246,6 +483,7 @@ var TrackingPage = (function () {
             // console.log("beacons", JSON.stringify(beacons));
             if (this.counter == 5) {
                 this.counter = 0;
+                this.loadNotifications();
                 this.syncMobile();
             }
             this.counter += 1;
@@ -268,6 +506,7 @@ var TrackingPage = (function () {
             }, function (err) {
                 // this.presentToast(err);
             });
+            this.processDeviceData();
         };
         this.syncMobile = function () {
             var _this = this;
@@ -279,7 +518,7 @@ var TrackingPage = (function () {
                 if (res.account) {
                     _this.device = res;
                     // this.storage.set('SMRT_DEVICE', this.device);
-                    _this.processDeviceData();
+                    // this.processDeviceData();
                 }
                 else {
                     _this.presentToast("This device has not link to account!");
@@ -290,11 +529,9 @@ var TrackingPage = (function () {
             });
         };
         this.goNotificationsPage = function () {
-            // TODO
-            // console.log("Ojbect: "+topic);
-            // this.navCtrl.push(this.notificationsPage, {
-            //   username : this.username
-            // })
+            if (this.messageCount) {
+                this.navCtrl.push(this.notificationsPage);
+            }
         };
         this.logout = function () {
             var _this = this;
@@ -357,120 +594,23 @@ var TrackingPage = (function () {
         };
         this.navCtrl = navCtrl;
         this.navParams = navParams;
-        this.device = {
-            deviceId: 0,
-            name: "",
-            number: "",
-            model: "",
-            account: {
-                accountID: 0,
-                username: "",
-                avatar: {
-                    url: ""
-                },
-                type: "",
-                active: false,
-                attendance: {
-                    attendanceId: 0,
-                    checkInDate: "",
-                    checkInStation: {
-                        stationId: 0,
-                        name: "",
-                        code: "",
-                        color: [],
-                        date: ""
-                    },
-                    checkOutDate: "",
-                    checkOutStation: {
-                        stationId: 0,
-                        name: "",
-                        code: "",
-                        color: [],
-                        date: ""
-                    },
-                    date: ""
-                },
-                tracking: {
-                    trackingId: 0,
-                    primaryNode: {
-                        nodeId: 0,
-                        name: "",
-                        point: 0,
-                        date: ""
-                    },
-                    secondaryNode: {
-                        nodeId: 0,
-                        name: "",
-                        point: 0,
-                        date: ""
-                    },
-                    primaryDistance: 0,
-                    secondaryDistance: 0,
-                    section: {
-                        sectionId: 0,
-                        name: "",
-                        startNode: {
-                            nodeId: 0,
-                            name: "",
-                            point: 0,
-                            date: ""
-                        },
-                        endNode: {
-                            nodeId: 0,
-                            name: "",
-                            point: 0,
-                            date: ""
-                        },
-                        remark: "",
-                        date: ""
-                    },
-                    stations: [],
-                    date: ""
-                },
-                date: ""
-            },
-            date: ""
+        this.page = {
+            avatarUrl: "",
+            accountUsername: "No Name",
+            deviceModel: "",
+            checkInStation: "Not check In",
+            checkInDate: "no record",
+            checkOutStation: "Not check Out",
+            checkOutDate: "no record",
+            trackingType: "",
+            sectionName: "",
+            trackingDate: "no record",
+            trackingAgo: "no record"
         };
-        this.attendance = {
-            attendanceId: 0,
-            checkInDate: "",
-            checkInStation: {
-                stationId: 0,
-                name: "",
-                code: "",
-                color: [],
-                date: ""
-            },
-            checkOutDate: "",
-            checkOutStation: {
-                stationId: 0,
-                name: "",
-                code: "",
-                color: [],
-                date: ""
-            },
-            date: ""
-        };
-        this.section = {
-            sectionId: 0,
-            name: "",
-            startNode: {
-                nodeId: 0,
-                name: "",
-                point: 0,
-                date: ""
-            },
-            endNode: {
-                nodeId: 0,
-                name: "",
-                point: 0,
-                date: ""
-            },
-            remark: "",
-            date: ""
-        };
+        this.device = null;
         this.stations = [];
         this.counter = 5;
+        this.messageCount = 0;
     }
     TrackingPage.prototype.ionViewDidLoad = function () {
         var _this = this;
@@ -478,6 +618,7 @@ var TrackingPage = (function () {
             _this.processDeviceData();
             _this.beaconScanning();
             _this.getBeaconRegion();
+            _this.pushInit();
         }, function () {
             _this.logout();
         });
@@ -504,162 +645,16 @@ var TrackingPage = (function () {
 }());
 TrackingPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-tracking',template:/*ion-inline-start:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/tracking/tracking.html"*/'<!--\n  Generated template for the TrackingPage page.\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n  Ionic pages and navigation.\n-->\n<ion-header>\n\n  <ion-navbar hideBackButton= "true">\n    <ion-title>\n      SMRT Tracking\n    </ion-title>\n    <ion-buttons end>\n      <button ion-button icon-only large (click) = "goNotificationsPage(account)">\n        <ion-icon class="notificationIcon"name="mail"></ion-icon>\n        <ion-badge class="nav-badge">3</ion-badge>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <ion-card class="account">\n    <ion-item class="item">\n      <ion-avatar item-start>\n        <img [src]="device.account?device.account.avatar?device.account.avatar.url:\'\':\'\'" />\n      </ion-avatar>\n     <h2 class="name">\n       {{ device.account?device.account.username:"No Name" }}\n     </h2>\n     <h2 class="model">\n       {{ device.model }}\n     </h2>\n    </ion-item>\n  </ion-card>\n  <ion-card class="attendance">\n    <ion-item class="item">\n      <ion-icon name="log-in" item-start large></ion-icon>\n      <h2 class="title">\n        {{ attendance.checkInStation?\n          attendance.checkInStation.name:\n          "Not check In" }}\n      </h2>\n      <h3 class="info">\n        {{ attendance.checkInDate?\n          attendance.checkInDate:\n          "no record" }}\n      </h3>\n    </ion-item>\n    <ion-item class="item">\n      <ion-icon name="log-out" item-start large></ion-icon>\n      <h2 class="title">\n        {{ attendance.checkOutStation?\n          attendance.checkOutStation.name:\n          "Not check Out" }}\n      </h2>\n      <h3 class="info">\n        {{ attendance.checkOutDate?\n          attendance.checkOutDate:\n          "no record" }}\n      </h3>\n    </ion-item>\n  </ion-card>\n  <ion-card class="tracking">\n    <ion-item class="stations">\n      <ion-grid>\n        <ion-row>\n          <ion-col *ngFor="let station of stations">\n            <div class="station">\n              <station-icon [station]="station"></station-icon>\n              <div class="name">\n                {{ station.name }}\n              </div>\n            </div>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n    </ion-item>\n    <ion-item class="section">\n      <h2 class="title">\n        Section:\n        {{ section.name + (section.remark?" "+section.remark:"") }}\n      </h2>\n      <h3 class="info">\n        {{ device.account?\n          device.account.tracking?\n          (device.account.tracking.date|dateFormat:\'YYYY MMM DD HH:mm:ss\'):\n          "no record":\n          "no record" }}\n      </h3>\n      <h3 class="info-sm">\n        {{ device.account?\n          device.account.tracking?\n          (formatDate(device.account.tracking.date) + " ago"):\n          "no record":\n          "no record" }}\n      </h3>\n    </ion-item>\n  </ion-card>\n  <ion-fab bottom right mini>\n    <button class="logoutButton" ion-fab (click) ="logout()">\n      <ion-icon name="arrow-dropleft"></ion-icon>\n    </button>\n  </ion-fab>\n</ion-content>\n'/*ion-inline-end:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/tracking/tracking.html"*/,
+        selector: 'page-tracking',template:/*ion-inline-start:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/tracking/tracking.html"*/'<!--\n  Generated template for the TrackingPage page.\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n  Ionic pages and navigation.\n-->\n<ion-header>\n\n  <ion-navbar hideBackButton= "true">\n    <ion-title>\n      SMRT Tracking\n    </ion-title>\n    <ion-buttons end>\n      <button ion-button icon-only large (click)="goNotificationsPage(account)">\n        <ion-icon class="notificationIcon" name="mail"></ion-icon>\n        <ion-badge *ngIf="messageCount" class="nav-badge">\n          {{ messageCount }}\n        </ion-badge>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <ion-card class="account">\n    <ion-item class="item">\n      <ion-avatar item-start>\n        <img [src]="page.avatarUrl" />\n      </ion-avatar>\n     <h2 class="name">\n       {{ page.accountUsername }}\n     </h2>\n     <h2 class="model">\n       {{ page.deviceModel }}\n     </h2>\n    </ion-item>\n  </ion-card>\n  <ion-card class="attendance">\n    <ion-item class="item">\n      <ion-icon name="log-in" item-start large></ion-icon>\n      <h2 class="title">\n        {{ page.checkInStation }}\n      </h2>\n      <h3 class="info">\n        {{ page.checkInDate|dateFormat:\'MMM DD HH:mm:ss\' }}\n      </h3>\n    </ion-item>\n    <ion-item class="item">\n      <ion-icon name="log-out" item-start large></ion-icon>\n      <h2 class="title">\n        {{ page.checkOutStation }}\n      </h2>\n      <h3 class="info">\n        {{ page.checkOutDate|dateFormat:\'MMM DD HH:mm:ss\' }}\n      </h3>\n    </ion-item>\n  </ion-card>\n  <ion-card class="tracking">\n    <ion-item class="stations">\n      <ion-grid>\n        <ion-row>\n          <ion-col *ngFor="let station of stations">\n            <div class="station">\n              <station-icon [station]="station"></station-icon>\n              <div class="name">\n                {{ station.name }}\n              </div>\n            </div>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n    </ion-item>\n    <ion-item class="section" [ngClass]="page.trackingType">\n      <h2 class="title">\n        Section:\n        {{ page.sectionName }}\n      </h2>\n      <h3 class="info">\n        {{ page.trackingDate|dateFormat:\'YYYY MMM DD HH:mm:ss\' }}\n      </h3>\n      <h3 class="info-sm">\n        {{ page.trackingAgo + " ago" }}\n      </h3>\n    </ion-item>\n  </ion-card>\n  <ion-fab bottom right mini>\n    <button class="logoutButton" ion-fab (click) ="logout()">\n      <ion-icon name="arrow-dropleft"></ion-icon>\n    </button>\n  </ion-fab>\n</ion-content>\n'/*ion-inline-end:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/tracking/tracking.html"*/,
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* NavController */], __WEBPACK_IMPORTED_MODULE_5__providers_api_api__["a" /* ApiProvider */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* ToastController */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1__ionic_storage__["b" /* Storage */], __WEBPACK_IMPORTED_MODULE_6__ionic_native_ibeacon__["a" /* IBeacon */], __WEBPACK_IMPORTED_MODULE_7__ionic_native_background_mode__["a" /* BackgroundMode */], __WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* ApplicationRef */]])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_3__providers_api_api__["a" /* ApiProvider */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* ToastController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */], __WEBPACK_IMPORTED_MODULE_4__ionic_storage__["b" /* Storage */], __WEBPACK_IMPORTED_MODULE_5__ionic_native_ibeacon__["a" /* IBeacon */], __WEBPACK_IMPORTED_MODULE_6__ionic_native_background_mode__["a" /* BackgroundMode */], __WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* ApplicationRef */], __WEBPACK_IMPORTED_MODULE_7__ionic_native_push__["a" /* Push */]])
 ], TrackingPage);
 
 //# sourceMappingURL=tracking.js.map
 
 /***/ }),
 
-/***/ 106:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NotificationsPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(16);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-var NotificationsPage = (function () {
-    function NotificationsPage(navCtrl, navParams, platform, actionsheetCtrl, alertCtrl) {
-        this.navCtrl = navCtrl;
-        this.navParams = navParams;
-        this.platform = platform;
-        this.actionsheetCtrl = actionsheetCtrl;
-        this.alertCtrl = alertCtrl;
-        this.openYNMenu = function (acceptText, rejectText) {
-            var _this = this;
-            var actionSheet = this.actionsheetCtrl.create({
-                title: 'Reply',
-                cssClass: 'action-sheets-basic-page',
-                buttons: [
-                    {
-                        text: acceptText,
-                        role: 'destructive',
-                        icon: !this.platform.is('ios') ? 'trash' : null,
-                        handler: function () {
-                            _this.topics[_this.chosenTopicId].message = "Reply: " + acceptText;
-                        }
-                    },
-                    {
-                        text: rejectText,
-                        role: 'destructive',
-                        icon: !this.platform.is('ios') ? 'trash' : null,
-                        handler: function () {
-                            _this.topics[_this.chosenTopicId].message = "Reply: " + rejectText;
-                        }
-                    },
-                    {
-                        text: 'Cancel',
-                        role: 'cancel',
-                        icon: !this.platform.is('ios') ? 'close' : null,
-                        handler: function () {
-                            console.log('Cancel clicked');
-                        }
-                    }
-                ]
-            });
-            actionSheet.present();
-        };
-        this.openReplyMenu = function (idx) {
-            this.chosenTopicId = idx;
-        };
-        this.sendMessage = function () {
-            this.topics[this.chosenTopicId].message = "Reply: " + this.message;
-            this.message = "";
-            this.chosenTopicId = 0;
-        };
-        this.processReply = function (idx) {
-            var topic = this.topics[idx];
-            if (!topic.message) {
-                if (topic.needReply) {
-                    this.openReplyMenu(idx);
-                }
-                else {
-                    this.openYNMenu(topic.acceptText, topic.rejectText);
-                }
-            }
-        };
-        this.clearAllMessages = function () {
-            this.topics = [];
-        };
-        this.chosenTopicId = 0;
-        this.message = "";
-        this.topics = [{
-                topicId: 1,
-                title: "Checking",
-                content: "Are you at Station 1?",
-                author: {
-                    username: "Daniel",
-                    avatar: {
-                        url: "images/daniel.png"
-                    }
-                },
-                needReply: false,
-                acceptText: "YES",
-                rejectText: "NO",
-                date: "2017-11-03T12:00:00+8:00"
-            }, {
-                topicId: 2,
-                title: "Checking",
-                content: "Where are you heading to?",
-                author: {
-                    username: "Emily",
-                    avatar: {
-                        url: "images/emily.png"
-                    }
-                },
-                needReply: true,
-                acceptText: null,
-                rejectText: null,
-                date: "2017-11-03T13:00:00+8:00"
-            }, {
-                topicId: 3,
-                title: "Leisure",
-                content: "How long will you need?",
-                author: {
-                    username: "Emily",
-                    avatar: {
-                        url: "images/emily.png"
-                    }
-                },
-                needReply: true,
-                acceptText: null,
-                rejectText: null,
-                date: "2017-11-03T14:00:00+8:00"
-            }];
-    }
-    NotificationsPage.prototype.ionViewDidLoad = function () {
-        console.log('ionViewDidLoad NotificationsPage');
-        this.account = this.navParams.get('account');
-    };
-    return NotificationsPage;
-}());
-NotificationsPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-notifications',template:/*ion-inline-start:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Notifications</ion-title>\n    <ion-buttons end>\n    <button ion-button item-end (click) = "clearAllMessages()">Clear All</button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n<ion-content padding>\n  <ion-list>\n    <ion-item class="topic" *ngFor="let topic of topics; index as i" (click)="processReply(i)">\n      <ion-avatar item-start >\n        <img src= "{{topic.author.avatar.url}}">\n      </ion-avatar>\n      <h2 class="topicTitle">\n        {{topic.title}}\n        <span class="date">{{ topic.date }}</span>\n      </h2>\n      <ion-note class="content">{{topic.author.username}} : {{topic.content}}</ion-note>\n      <p class="replyMessage">\n        {{ topic.message }}\n      </p>\n    </ion-item>\n  </ion-list>\n</ion-content>\n<ion-footer *ngIf = "this.chosenTopicId">\n\n  <ion-toolbar>\n    <form (submit)="sendMessage()">\n      <!-- <ion-item no-lines>\n      <ion-icon item-start name="chatbubbles"></ion-icon>\n      <input class="message-input" dir="auto" placeholder="Type your message" autocomplete ="on" autocorrect="on" spellcheck=true />\n    </ion-item> -->\n    <ion-searchbar placeholder="Type your message"\n    [(ngModel)]="message" name="message" >\n  </ion-searchbar>\n</form>\n<!-- [showCancelButton]="shouldShowCancel" -->\n<!--    (ionCancel)="onCancel($event)"-->\n</ion-toolbar>\n</ion-footer>\n'/*ion-inline-end:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/,
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* Platform */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]])
-], NotificationsPage);
-
-//# sourceMappingURL=notifications.js.map
-
-/***/ }),
-
-/***/ 114:
+/***/ 113:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
@@ -672,11 +667,11 @@ function webpackEmptyAsyncContext(req) {
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 114;
+webpackEmptyAsyncContext.id = 113;
 
 /***/ }),
 
-/***/ 157:
+/***/ 156:
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -685,7 +680,7 @@ var map = {
 		1
 	],
 	"../pages/tracking/tracking.module": [
-		398,
+		400,
 		0
 	]
 };
@@ -700,7 +695,7 @@ function webpackAsyncContext(req) {
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
 	return Object.keys(map);
 };
-webpackAsyncContext.id = 157;
+webpackAsyncContext.id = 156;
 module.exports = webpackAsyncContext;
 
 /***/ }),
@@ -709,9 +704,128 @@ module.exports = webpackAsyncContext;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomePage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_storage__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tracking_tracking__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_api_api__ = __webpack_require__(81);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+var HomePage = (function () {
+    function HomePage(navCtrl, api, toastCtrl, storage) {
+        this.navCtrl = navCtrl;
+        this.api = api;
+        this.toastCtrl = toastCtrl;
+        this.storage = storage;
+        this.trackingPage = __WEBPACK_IMPORTED_MODULE_3__tracking_tracking__["a" /* TrackingPage */];
+        this.clearNotifications = function () {
+            this.storage.remove('SMRT_NOTIFICATIONS').then(function () {
+                console.log("SMRT_NOTIFICATIONS", "remove");
+            });
+        };
+        this.presentToast = function (message) {
+            var toast = this.toastCtrl.create({
+                message: message,
+                duration: 3000,
+                position: 'top'
+            });
+            toast.present();
+        };
+        this.login = function () {
+            var _this = this;
+            if (this.device.name) {
+                var input = {
+                    name: this.device.name
+                };
+                console.log(input);
+                this.api.sendRequest("SyncDevice", -1, null, input, function (res) {
+                    console.log("this.device", res);
+                    if (res.account) {
+                        _this.device = res;
+                        _this.storage.set('SMRT_DEVICE', _this.device);
+                        _this.navCtrl.push(_this.trackingPage);
+                    }
+                    else {
+                        _this.presentToast("This device has not link to account!");
+                    }
+                }, function (err) {
+                    _this.presentToast(err);
+                });
+            }
+            else {
+                this.presentToast("Invalid Inputs");
+            }
+        };
+        this.checkLogin = function (success, fail) {
+            var _this = this;
+            this.storage.get('SMRT_DEVICE').then(function (val) {
+                console.log('SMRT_DEVICE', val);
+                if (val) {
+                    _this.device = val;
+                    if (_this.device.account) {
+                        success();
+                    }
+                    else {
+                        fail();
+                    }
+                }
+                else {
+                    fail();
+                }
+            });
+        };
+        this.navCtrl = navCtrl;
+        this.device = {
+            deviceId: 0,
+            name: "SMRTSUMS001",
+            number: "",
+            model: "",
+            account: null,
+            date: ""
+        };
+    }
+    HomePage.prototype.ionViewDidLoad = function () {
+        var _this = this;
+        this.checkLogin(function () {
+            _this.navCtrl.push(_this.trackingPage);
+        }, function () {
+            _this.clearNotifications();
+        });
+    };
+    return HomePage;
+}());
+HomePage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-home',template:/*ion-inline-start:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/home/home.html"*/'\n<ion-header>\n</ion-header>\n<ion-content class="loginBackground">\n    <form (submit)="login()" class= "login">\n      <img src= "assets/img/SMRTlogo.png"  />\n      <ion-list class="loginList">\n        <ion-item class="input">\n          <ion-label class="lable">Device :</ion-label>\n          <ion-input type="string" [(ngModel)]="device.name" name = "deviceName"></ion-input>\n        </ion-item>\n          <button ion-button block class="loginButton">Link Device</button>\n        </ion-list>\n    </form>\n</ion-content>\n'/*ion-inline-end:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/home/home.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_4__providers_api_api__["a" /* ApiProvider */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* ToastController */], __WEBPACK_IMPORTED_MODULE_1__ionic_storage__["b" /* Storage */]])
+], HomePage);
+
+//# sourceMappingURL=home.js.map
+
+/***/ }),
+
+/***/ 321:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(321);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(339);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(322);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(340);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -719,33 +833,35 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 339:
+/***/ 340:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(115);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(114);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_splash_screen__ = __webpack_require__(318);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_status_bar__ = __webpack_require__(319);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_component__ = __webpack_require__(393);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_home_home__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_notifications_notifications__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_component__ = __webpack_require__(394);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_home_home__ = __webpack_require__(320);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_notifications_notifications__ = __webpack_require__(104);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_tracking_tracking__ = __webpack_require__(105);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_api_api__ = __webpack_require__(82);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_storage__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pipes_pipes_module__ = __webpack_require__(394);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_components_module__ = __webpack_require__(396);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__ionic_native_ibeacon__ = __webpack_require__(158);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_native_background_mode__ = __webpack_require__(160);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_api_api__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_storage__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pipes_pipes_module__ = __webpack_require__(395);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_components_module__ = __webpack_require__(397);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__ionic_native_ibeacon__ = __webpack_require__(157);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_native_background_mode__ = __webpack_require__(159);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_push__ = __webpack_require__(160);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -778,17 +894,17 @@ AppModule = __decorate([
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["e" /* IonicModule */].forRoot(__WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* MyApp */], {}, {
+            __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["d" /* IonicModule */].forRoot(__WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* MyApp */], {}, {
                 links: [
-                    { loadChildren: '../pages/tracking/tracking.module#TrackingPageModule', name: 'TrackingPage', segment: 'tracking', priority: 'low', defaultHistory: [] },
-                    { loadChildren: '../pages/notifications/notifications.module#NotificationsPageModule', name: 'NotificationsPage', segment: 'notifications', priority: 'low', defaultHistory: [] }
+                    { loadChildren: '../pages/notifications/notifications.module#NotificationsPageModule', name: 'NotificationsPage', segment: 'notifications', priority: 'low', defaultHistory: [] },
+                    { loadChildren: '../pages/tracking/tracking.module#TrackingPageModule', name: 'TrackingPage', segment: 'tracking', priority: 'low', defaultHistory: [] }
                 ]
             }),
             __WEBPACK_IMPORTED_MODULE_11__ionic_storage__["a" /* IonicStorageModule */].forRoot(),
             __WEBPACK_IMPORTED_MODULE_12__pipes_pipes_module__["a" /* PipesModule */],
             __WEBPACK_IMPORTED_MODULE_13__components_components_module__["a" /* ComponentsModule */]
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_3_ionic_angular__["c" /* IonicApp */]],
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_3_ionic_angular__["b" /* IonicApp */]],
         entryComponents: [
             __WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* MyApp */],
             __WEBPACK_IMPORTED_MODULE_7__pages_home_home__["a" /* HomePage */],
@@ -798,10 +914,11 @@ AppModule = __decorate([
         providers: [
             __WEBPACK_IMPORTED_MODULE_5__ionic_native_status_bar__["a" /* StatusBar */],
             __WEBPACK_IMPORTED_MODULE_4__ionic_native_splash_screen__["a" /* SplashScreen */],
-            { provide: __WEBPACK_IMPORTED_MODULE_2__angular_core__["v" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["d" /* IonicErrorHandler */] },
+            { provide: __WEBPACK_IMPORTED_MODULE_2__angular_core__["v" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["c" /* IonicErrorHandler */] },
             __WEBPACK_IMPORTED_MODULE_10__providers_api_api__["a" /* ApiProvider */],
             __WEBPACK_IMPORTED_MODULE_14__ionic_native_ibeacon__["a" /* IBeacon */],
-            __WEBPACK_IMPORTED_MODULE_15__ionic_native_background_mode__["a" /* BackgroundMode */]
+            __WEBPACK_IMPORTED_MODULE_15__ionic_native_background_mode__["a" /* BackgroundMode */],
+            __WEBPACK_IMPORTED_MODULE_16__ionic_native_push__["a" /* Push */]
         ]
     })
 ], AppModule);
@@ -810,7 +927,7 @@ AppModule = __decorate([
 
 /***/ }),
 
-/***/ 375:
+/***/ 376:
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -1065,11 +1182,11 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 375;
+webpackContext.id = 376;
 
 /***/ }),
 
-/***/ 393:
+/***/ 394:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1078,7 +1195,7 @@ webpackContext.id = 375;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(319);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(318);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(320);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1108,20 +1225,20 @@ var MyApp = (function () {
 MyApp = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/app/app.html"*/'<ion-nav [root]="rootPage"></ion-nav>\n'/*ion-inline-end:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/app/app.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
 ], MyApp);
 
 //# sourceMappingURL=app.component.js.map
 
 /***/ }),
 
-/***/ 394:
+/***/ 395:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PipesModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__date_format_date_format__ = __webpack_require__(395);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__date_format_date_format__ = __webpack_require__(396);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1147,7 +1264,7 @@ PipesModule = __decorate([
 
 /***/ }),
 
-/***/ 395:
+/***/ 396:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1192,14 +1309,14 @@ DateFormatPipe = __decorate([
 
 /***/ }),
 
-/***/ 396:
+/***/ 397:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ComponentsModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__station_icon_station_icon__ = __webpack_require__(397);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__station_icon_station_icon__ = __webpack_require__(398);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1217,7 +1334,7 @@ var ComponentsModule = (function () {
 ComponentsModule = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
         declarations: [__WEBPACK_IMPORTED_MODULE_2__station_icon_station_icon__["a" /* StationIconComponent */]],
-        imports: [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* IonicModule */]],
+        imports: [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* IonicModule */]],
         exports: [__WEBPACK_IMPORTED_MODULE_2__station_icon_station_icon__["a" /* StationIconComponent */]]
     })
 ], ComponentsModule);
@@ -1226,7 +1343,7 @@ ComponentsModule = __decorate([
 
 /***/ }),
 
-/***/ 397:
+/***/ 398:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1298,121 +1415,10 @@ StationIconComponent = __decorate([
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomePage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_storage__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tracking_tracking__ = __webpack_require__(105);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_api_api__ = __webpack_require__(82);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-var HomePage = (function () {
-    function HomePage(navCtrl, api, toastCtrl, storage) {
-        this.navCtrl = navCtrl;
-        this.api = api;
-        this.toastCtrl = toastCtrl;
-        this.storage = storage;
-        this.trackingPage = __WEBPACK_IMPORTED_MODULE_3__tracking_tracking__["a" /* TrackingPage */];
-        this.presentToast = function (message) {
-            var toast = this.toastCtrl.create({
-                message: message,
-                duration: 3000,
-                position: 'top'
-            });
-            toast.present();
-        };
-        this.login = function () {
-            var _this = this;
-            if (this.device.name) {
-                var input = {
-                    name: this.device.name
-                };
-                console.log(input);
-                this.api.sendRequest("SyncDevice", -1, null, input, function (res) {
-                    console.log("this.device", res);
-                    if (res.account) {
-                        _this.device = res;
-                        _this.storage.set('SMRT_DEVICE', _this.device);
-                        _this.navCtrl.push(_this.trackingPage);
-                    }
-                    else {
-                        _this.presentToast("This device has not link to account!");
-                    }
-                }, function (err) {
-                    _this.presentToast(err);
-                });
-            }
-            else {
-                this.presentToast("Invalid Inputs");
-            }
-        };
-        this.checkLogin = function (success, fail) {
-            var _this = this;
-            this.storage.get('SMRT_DEVICE').then(function (val) {
-                console.log('SMRT_DEVICE', val);
-                if (val) {
-                    _this.device = val;
-                    if (_this.device.account) {
-                        success();
-                    }
-                    else {
-                        fail();
-                    }
-                }
-            });
-        };
-        this.navCtrl = navCtrl;
-        this.device = {
-            deviceId: 0,
-            name: "SMRTSUMS001",
-            number: "",
-            model: "",
-            account: null,
-            date: ""
-        };
-    }
-    HomePage.prototype.ionViewDidLoad = function () {
-        var _this = this;
-        this.checkLogin(function () {
-            _this.navCtrl.push(_this.trackingPage);
-        }, function () {
-            // NOTHING
-        });
-    };
-    return HomePage;
-}());
-HomePage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-home',template:/*ion-inline-start:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/home/home.html"*/'\n<ion-header>\n</ion-header>\n<ion-content class="loginBackground">\n    <form (submit)="login()" class= "login">\n      <img src= "assets/img/SMRTlogo.png"  />\n      <ion-list class="loginList">\n        <ion-item class="input">\n          <ion-label class="lable">Device :</ion-label>\n          <ion-input type="string" [(ngModel)]="device.name" name = "deviceName"></ion-input>\n        </ion-item>\n          <button ion-button block class="loginButton">Link Device</button>\n        </ion-list>\n    </form>\n</ion-content>\n'/*ion-inline-end:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/home/home.html"*/
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* NavController */], __WEBPACK_IMPORTED_MODULE_4__providers_api_api__["a" /* ApiProvider */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* ToastController */], __WEBPACK_IMPORTED_MODULE_1__ionic_storage__["b" /* Storage */]])
-], HomePage);
-
-//# sourceMappingURL=home.js.map
-
-/***/ }),
-
-/***/ 82:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiProvider; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(115);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(365);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(114);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(366);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1554,6 +1560,11 @@ var ApiProvider = (function () {
                     method: "POST",
                     secret: "00tracking00",
                     link: "/service/bms"
+                }, {
+                    name: "DeviceToken",
+                    method: "PUT",
+                    secret: "00notification00",
+                    link: "/service/asset/register"
                 }]
         };
     }
@@ -1568,5 +1579,5 @@ ApiProvider = __decorate([
 
 /***/ })
 
-},[320]);
+},[321]);
 //# sourceMappingURL=main.js.map

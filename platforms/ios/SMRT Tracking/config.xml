@@ -46,6 +46,9 @@
     <feature name="BackgroundMode">
         <param name="ios-package" value="APPBackgroundMode" />
     </feature>
+    <feature name="PushNotification">
+        <param name="ios-package" value="PushPlugin" />
+    </feature>
     <name>SMRT Tracking</name>
     <description>SMRT track tracking</description>
     <author email="developer@viatick.com" href="https://www.viatick.com/">Viatick Development Team</author>

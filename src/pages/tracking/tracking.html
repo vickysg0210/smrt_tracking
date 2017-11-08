@@ -11,9 +11,11 @@
       SMRT Tracking
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only large (click) = "goNotificationsPage(account)">
-        <ion-icon class="notificationIcon"name="mail"></ion-icon>
-        <ion-badge class="nav-badge">3</ion-badge>
+      <button ion-button icon-only large (click)="goNotificationsPage(account)">
+        <ion-icon class="notificationIcon" name="mail"></ion-icon>
+        <ion-badge *ngIf="messageCount" class="nav-badge">
+          {{ messageCount }}
+        </ion-badge>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -23,13 +25,13 @@
   <ion-card class="account">
     <ion-item class="item">
       <ion-avatar item-start>
-        <img [src]="device.account?device.account.avatar?device.account.avatar.url:'':''" />
+        <img [src]="page.avatarUrl" />
       </ion-avatar>
      <h2 class="name">
-       {{ device.account?device.account.username:"No Name" }}
+       {{ page.accountUsername }}
      </h2>
      <h2 class="model">
-       {{ device.model }}
+       {{ page.deviceModel }}
      </h2>
     </ion-item>
   </ion-card>
@@ -37,27 +39,19 @@
     <ion-item class="item">
       <ion-icon name="log-in" item-start large></ion-icon>
       <h2 class="title">
-        {{ attendance.checkInStation?
-          attendance.checkInStation.name:
-          "Not check In" }}
+        {{ page.checkInStation }}
       </h2>
       <h3 class="info">
-        {{ attendance.checkInDate?
-          attendance.checkInDate:
-          "no record" }}
+        {{ page.checkInDate|dateFormat:'MMM DD HH:mm:ss' }}
       </h3>
     </ion-item>
     <ion-item class="item">
       <ion-icon name="log-out" item-start large></ion-icon>
       <h2 class="title">
-        {{ attendance.checkOutStation?
-          attendance.checkOutStation.name:
-          "Not check Out" }}
+        {{ page.checkOutStation }}
       </h2>
       <h3 class="info">
-        {{ attendance.checkOutDate?
-          attendance.checkOutDate:
-          "no record" }}
+        {{ page.checkOutDate|dateFormat:'MMM DD HH:mm:ss' }}
       </h3>
     </ion-item>
   </ion-card>
@@ -76,24 +70,16 @@
         </ion-row>
       </ion-grid>
     </ion-item>
-    <ion-item class="section">
+    <ion-item class="section" [ngClass]="page.trackingType">
       <h2 class="title">
         Section:
-        {{ section.name + (section.remark?" "+section.remark:"") }}
+        {{ page.sectionName }}
       </h2>
       <h3 class="info">
-        {{ device.account?
-          device.account.tracking?
-          (device.account.tracking.date|dateFormat:'YYYY MMM DD HH:mm:ss'):
-          "no record":
-          "no record" }}
+        {{ page.trackingDate|dateFormat:'YYYY MMM DD HH:mm:ss' }}
       </h3>
       <h3 class="info-sm">
-        {{ device.account?
-          device.account.tracking?
-          (formatDate(device.account.tracking.date) + " ago"):
-          "no record":
-          "no record" }}
+        {{ page.trackingAgo + " ago" }}
       </h3>
     </ion-item>
   </ion-card>

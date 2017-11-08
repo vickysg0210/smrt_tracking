@@ -107,6 +107,14 @@ module.exports = [
       "cordova.plugins.backgroundMode",
       "plugin.backgroundMode"
     ]
+  },
+  {
+    "id": "phonegap-plugin-push.PushNotification",
+    "file": "plugins/phonegap-plugin-push/www/push.js",
+    "pluginId": "phonegap-plugin-push",
+    "clobbers": [
+      "PushNotification"
+    ]
   }
 ];
 module.exports.metadata = 
@@ -120,7 +128,8 @@ module.exports.metadata =
   "cordova-plugin-whitelist": "1.3.1",
   "cordova-sqlite-storage": "2.1.0",
   "ionic-plugin-keyboard": "2.2.1",
-  "cordova-plugin-background-mode": "0.7.2"
+  "cordova-plugin-background-mode": "0.7.2",
+  "phonegap-plugin-push": "2.1.0"
 };
 // BOTTOM OF METADATA
 });

@@ -10,5 +10,6 @@ export interface TrackingInterface {
   secondaryDistance: number,
   section: SectionInterface,
   stations: Array<StationInterface>,
+  type: string,
   date : string
  };

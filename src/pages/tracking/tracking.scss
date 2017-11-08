@@ -45,6 +45,7 @@ page-tracking {
       }
     }
     .section {
+      padding-top: 10px;
       .title {
         text-align: center;
         font-weight: bold;
@@ -65,6 +66,15 @@ page-tracking {
         font-weight: bold;
         color: Grey;
         margin-bottom: 20px;
+      }
+      &.save_zone {
+        background: linear-gradient(#ffffff, #66ffb3);
+      }
+      &.warning_zone {
+        background: linear-gradient(#ffffff, #ffe680);
+      }
+      &.danger_zone {
+        background: linear-gradient(#ffffff, #ff9999);
       }
     }
   }
