@@ -8,6 +8,7 @@ webpackJsonp([2],{
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_api_api__ = __webpack_require__(49);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -22,14 +23,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var NotificationsPage = (function () {
-    function NotificationsPage(navCtrl, navParams, platform, storage, actionsheetCtrl, toastCtrl) {
+    function NotificationsPage(navCtrl, navParams, platform, storage, actionsheetCtrl, toastCtrl, api) {
         this.navCtrl = navCtrl;
         this.navParams = navParams;
         this.platform = platform;
         this.storage = storage;
         this.actionsheetCtrl = actionsheetCtrl;
         this.toastCtrl = toastCtrl;
+        this.api = api;
         this.loadNotifications = function () {
             var _this = this;
             this.storage.get('SMRT_NOTIFICATIONS').then(function (val) {
@@ -38,37 +41,7 @@ var NotificationsPage = (function () {
                     _this.topics = val;
                 }
                 else {
-                    _this.topics = [{
-                            topicId: 1,
-                            title: "Notification to Khoa",
-                            content: "Where are you Khoa?",
-                            needReply: false,
-                            acceptText: "Home",
-                            rejectText: "Toilet",
-                            author: "BIE YAQING",
-                            avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
-                            date: "2017-11-03T14:00:00+8:00"
-                        }, {
-                            topicId: 2,
-                            title: "Notification to Khoa",
-                            content: "Are you receiving?",
-                            needReply: false,
-                            acceptText: "Yes",
-                            rejectText: "No",
-                            author: "BIE YAQING",
-                            avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
-                            date: "2017-11-03T14:00:00+8:00"
-                        }, {
-                            topicId: 3,
-                            title: "Notification to Khoa",
-                            content: "Tell me where are you!",
-                            needReply: true,
-                            acceptText: "Yes",
-                            rejectText: "No",
-                            author: "BIE YAQING",
-                            avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
-                            date: "2017-11-03T14:00:00+8:00"
-                        }];
+                    _this.topics = [];
                 }
             });
         };
@@ -96,9 +69,11 @@ var NotificationsPage = (function () {
                             for (var o in _this.topics) {
                                 var topic = _this.topics[o];
                                 if (topic.topicId == _this.chosenTopicId) {
-                                    _this.topics[o].message = "Replied: " + acceptText;
-                                    _this.chosenTopicId = 0;
-                                    _this.saveNotifications();
+                                    _this.sendMessageRequest(acceptText, true, topic.topicId, function () {
+                                        _this.topics[o].message = "Replied: " + acceptText;
+                                        _this.chosenTopicId = 0;
+                                        _this.saveNotifications();
+                                    });
                                     break;
                                 }
                             }
@@ -111,9 +86,11 @@ var NotificationsPage = (function () {
                             for (var o in _this.topics) {
                                 var topic = _this.topics[o];
                                 if (topic.topicId == _this.chosenTopicId) {
-                                    _this.topics[o].message = "Replied: " + rejectText;
-                                    _this.chosenTopicId = 0;
-                                    _this.saveNotifications();
+                                    _this.sendMessageRequest(rejectText, false, topic.topicId, function () {
+                                        _this.topics[o].message = "Replied: " + rejectText;
+                                        _this.chosenTopicId = 0;
+                                        _this.saveNotifications();
+                                    });
                                     break;
                                 }
                             }
@@ -130,14 +107,17 @@ var NotificationsPage = (function () {
             actionSheet.present();
         };
         this.sendMessage = function () {
+            var _this = this;
             for (var o in this.topics) {
                 var topic = this.topics[o];
                 if (topic.topicId == this.chosenTopicId) {
-                    this.topics[o].message = "Replied: " + this.messageForm.message;
-                    this.saveNotifications();
-                    this.chosenTopicId = 0;
-                    this.messageForm.message = "";
-                    this.messageForm.showInput = false;
+                    this.sendMessageRequest(this.messageForm.message, true, topic.topicId, function () {
+                        _this.topics[o].message = "Replied: " + _this.messageForm.message;
+                        _this.saveNotifications();
+                        _this.chosenTopicId = 0;
+                        _this.messageForm.message = "";
+                        _this.messageForm.showInput = false;
+                    });
                     break;
                 }
             }
@@ -166,6 +146,45 @@ var NotificationsPage = (function () {
                 _this.topics = [];
             });
         };
+        this.sendMessageRequest = function (content, choice, topicId, success) {
+            var _this = this;
+            var input = {
+                deviceId: this.device.deviceId,
+                content: content,
+                choice: choice,
+                topicId: topicId
+            };
+            console.log("input", input);
+            this.api.sendRequest("SendMessage", -1, null, input, function (res) {
+                console.log("send message request", res);
+                success();
+            }, function (err) {
+                _this.presentToast(err);
+            });
+        };
+        this.onInputCancel = function (evt) {
+            this.chosenTopicId = 0;
+            this.messageForm.message = "";
+            this.messageForm.showInput = false;
+        };
+        this.checkLogin = function (success, fail) {
+            var _this = this;
+            this.storage.get('SMRT_DEVICE').then(function (val) {
+                console.log('SMRT_DEVICE', val);
+                if (val) {
+                    _this.device = val;
+                    if (_this.device.account) {
+                        success();
+                    }
+                    else {
+                        fail();
+                    }
+                }
+                else {
+                    fail();
+                }
+            });
+        };
         this.chosenTopicId = 0;
         this.messageForm = {
             message: "",
@@ -174,15 +193,27 @@ var NotificationsPage = (function () {
         this.topics = [];
     }
     NotificationsPage.prototype.ionViewDidLoad = function () {
-        this.loadNotifications();
+    };
+    NotificationsPage.prototype.ionViewDidEnter = function () {
+        var _this = this;
+        console.log("view did enter", "notifications");
+        this.checkLogin(function () {
+            _this.loadNotifications();
+        }, function () {
+            console.log("login fail...");
+            // NOTHING...
+        });
+    };
+    NotificationsPage.prototype.ionViewWillLeave = function () {
+        console.log("view will leave", "notifications");
     };
     return NotificationsPage;
 }());
 NotificationsPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-notifications',template:/*ion-inline-start:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Notifications</ion-title>\n    <ion-buttons end>\n    <button ion-button item-end (click)="clearAllMessages()">Clear All</button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n<ion-content padding>\n  <ion-list>\n    <ion-item class="topic" *ngFor="let topic of topics" (click)="processReply(topic.topicId)">\n      <ion-avatar item-start>\n        <img [src]="topic.avatar">\n      </ion-avatar>\n      <h2 class="topicTitle">\n        {{topic.title}}\n        <span class="date">{{ topic.date|dateFormat:\'MMM DD HH:mm:ss\' }}</span>\n      </h2>\n      <ion-note class="content">{{topic.author}} : {{topic.content}}</ion-note>\n      <p class="replyMessage">\n        {{ topic.message }}\n      </p>\n    </ion-item>\n  </ion-list>\n</ion-content>\n<ion-footer *ngIf="messageForm.showInput">\n  <ion-toolbar>\n    <form (submit)="sendMessage()">\n      <ion-searchbar placeholder="Type your message" [(ngModel)]="messageForm.message" name="message" ></ion-searchbar>\n    </form>\n  </ion-toolbar>\n</ion-footer>\n'/*ion-inline-end:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/,
+        selector: 'page-notifications',template:/*ion-inline-start:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Notifications</ion-title>\n    <ion-buttons end>\n    <button ion-button item-end (click)="clearAllMessages()">Clear All</button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n<ion-content padding>\n  <ion-list>\n    <ion-item class="topic" *ngFor="let topic of topics" (click)="processReply(topic.topicId)">\n      <ion-avatar item-start>\n        <img [src]="topic.avatar">\n      </ion-avatar>\n      <h2 class="topicTitle">\n        {{topic.title}}\n        <span class="date">{{ topic.date|dateFormat:\'MMM DD HH:mm:ss\' }}</span>\n      </h2>\n      <ion-note class="content">{{topic.author}} : {{topic.content}}</ion-note>\n      <p class="replyMessage">\n        {{ topic.message }}\n      </p>\n    </ion-item>\n  </ion-list>\n</ion-content>\n<ion-footer *ngIf="messageForm.showInput">\n  <ion-toolbar>\n    <form (submit)="sendMessage()">\n      <ion-searchbar placeholder="Type your message" showCancelButton="true" [(ngModel)]="messageForm.message" name="message" (ionCancel)="onInputCancel($event)"></ion-searchbar>\n    </form>\n  </ion-toolbar>\n</ion-footer>\n'/*ion-inline-end:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/,
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_storage__["b" /* Storage */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* ToastController */]])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_storage__["b" /* Storage */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* ToastController */], __WEBPACK_IMPORTED_MODULE_3__providers_api_api__["a" /* ApiProvider */]])
 ], NotificationsPage);
 
 //# sourceMappingURL=notifications.js.map
@@ -197,7 +228,7 @@ NotificationsPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__notifications_notifications__ = __webpack_require__(104);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_api_api__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_api_api__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_storage__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_ibeacon__ = __webpack_require__(157);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_background_mode__ = __webpack_require__(159);
@@ -308,9 +339,18 @@ var TrackingPage = (function () {
             this.storage.get('SMRT_NOTIFICATIONS').then(function (val) {
                 console.log('SMRT_NOTIFICATIONS', val);
                 if (val) {
-                    val.push(topic);
-                    _this.messageCount = val.length + 1;
-                    _this.storage.set('SMRT_NOTIFICATIONS', val);
+                    _this.messageCount = val.length;
+                    var isExist = false;
+                    for (var o in val) {
+                        if (val[o].topicId == topic.topicId) {
+                            isExist = true;
+                        }
+                    }
+                    if (!isExist) {
+                        val.push(topic);
+                        _this.messageCount += 1;
+                        _this.storage.set('SMRT_NOTIFICATIONS', val);
+                    }
                 }
                 else {
                     var notifications = [topic];
@@ -328,7 +368,7 @@ var TrackingPage = (function () {
             this.api.sendRequest("DeviceToken", this.device.deviceId, null, input, function (res) {
                 console.log("this.deviceToken", res);
             }, function (err) {
-                _this.presentToast(err);
+                _this.presentToast("DeviceToken: " + err);
             });
         };
         this.beaconScanning = function () {
@@ -476,7 +516,7 @@ var TrackingPage = (function () {
                     console.log(e);
                 }
             }, function (err) {
-                _this.presentToast(err);
+                _this.presentToast("BeaconRegion: " + err);
             });
         };
         this.sendBeaconRecords = function (beacons) {
@@ -525,7 +565,7 @@ var TrackingPage = (function () {
                     _this.logout();
                 }
             }, function (err) {
-                _this.presentToast(err);
+                _this.presentToast("SyncDevice: " + err);
             });
         };
         this.goNotificationsPage = function () {
@@ -613,8 +653,12 @@ var TrackingPage = (function () {
         this.messageCount = 0;
     }
     TrackingPage.prototype.ionViewDidLoad = function () {
+    };
+    TrackingPage.prototype.ionViewDidEnter = function () {
         var _this = this;
+        console.log("view did enter", "tracking");
         this.checkLogin(function () {
+            _this.loadNotifications();
             _this.processDeviceData();
             _this.beaconScanning();
             _this.getBeaconRegion();
@@ -624,6 +668,7 @@ var TrackingPage = (function () {
         });
     };
     TrackingPage.prototype.ionViewWillLeave = function () {
+        console.log("view will leave", "tracking");
         try {
             this.backgroundMode.disable();
             this.ibeacon.stopMonitoringForRegion(this.beaconRegion).then(function () {
@@ -709,7 +754,7 @@ module.exports = webpackAsyncContext;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_storage__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tracking_tracking__ = __webpack_require__(105);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_api_api__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_api_api__ = __webpack_require__(49);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -799,12 +844,18 @@ var HomePage = (function () {
         };
     }
     HomePage.prototype.ionViewDidLoad = function () {
+    };
+    HomePage.prototype.ionViewDidEnter = function () {
         var _this = this;
+        console.log("view did enter", "home");
         this.checkLogin(function () {
             _this.navCtrl.push(_this.trackingPage);
         }, function () {
             _this.clearNotifications();
         });
+    };
+    HomePage.prototype.ionViewWillLeave = function () {
+        console.log("view will leave", "home");
     };
     return HomePage;
 }());
@@ -848,7 +899,7 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_home_home__ = __webpack_require__(320);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_notifications_notifications__ = __webpack_require__(104);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_tracking_tracking__ = __webpack_require__(105);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_api_api__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_api_api__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_storage__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pipes_pipes_module__ = __webpack_require__(395);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_components_module__ = __webpack_require__(397);
@@ -1411,7 +1462,7 @@ StationIconComponent = __decorate([
 
 /***/ }),
 
-/***/ 81:
+/***/ 49:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1565,6 +1616,11 @@ var ApiProvider = (function () {
                     method: "PUT",
                     secret: "00notification00",
                     link: "/service/asset/register"
+                }, {
+                    name: "SendMessage",
+                    method: "POST",
+                    secret: "00notification00",
+                    link: "/service/asset/message"
                 }]
         };
     }

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { TopicInterface } from '../../model/TopicInterface';
+import { DeviceInterface } from "../../model/DeviceInterface";
 import { Platform, ActionSheetController } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import { ApiProvider } from "../../providers/api/api";
 
 @IonicPage()
 @Component({
@@ -12,13 +14,14 @@ import { Storage } from '@ionic/storage';
 })
 export class NotificationsPage {
   private topics: TopicInterface[];
+  private device: DeviceInterface;
   private messageForm: {
     message: string,
     showInput: boolean
   };
   private chosenTopicId: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, private storage: Storage, public actionsheetCtrl: ActionSheetController, private toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, private storage: Storage, public actionsheetCtrl: ActionSheetController, private toastCtrl: ToastController, private api: ApiProvider) {
     this.chosenTopicId = 0;
     this.messageForm = {
       message: "",
@@ -28,7 +31,17 @@ export class NotificationsPage {
   }
 
   ionViewDidLoad(){
-    this.loadNotifications();
+
+  }
+
+  ionViewDidEnter() {
+    console.log("view did enter", "notifications");
+    this.checkLogin(() => {
+      this.loadNotifications();
+    }, () => {
+      console.log("login fail...");
+      // NOTHING...
+    });
   }
 
   private loadNotifications = function() {
@@ -37,37 +50,39 @@ export class NotificationsPage {
       if(val) {
         this.topics = val;
       } else {
-        this.topics =[{
-          topicId: 1,
-          title: "Notification to Khoa",
-          content: "Where are you Khoa?",
-          needReply: false,
-          acceptText: "Home",
-          rejectText: "Toilet",
-          author: "BIE YAQING",
-          avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
-          date : "2017-11-03T14:00:00+8:00"
-        }, {
-          topicId: 2,
-          title: "Notification to Khoa",
-          content: "Are you receiving?",
-          needReply: false,
-          acceptText: "Yes",
-          rejectText: "No",
-          author: "BIE YAQING",
-          avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
-          date : "2017-11-03T14:00:00+8:00"
-        }, {
-          topicId: 3,
-          title: "Notification to Khoa",
-          content: "Tell me where are you!",
-          needReply: true,
-          acceptText: "Yes",
-          rejectText: "No",
-          author: "BIE YAQING",
-          avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
-          date : "2017-11-03T14:00:00+8:00"
-        }];
+        this.topics =[
+          // {
+          //   topicId: 1,
+          //   title: "Notification to Khoa",
+          //   content: "Where are you Khoa?",
+          //   needReply: false,
+          //   acceptText: "Home",
+          //   rejectText: "Toilet",
+          //   author: "BIE YAQING",
+          //   avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
+          //   date : "2017-11-08T03:38:55Z"
+          // }, {
+          //   topicId: 2,
+          //   title: "Notification to Khoa",
+          //   content: "Are you receiving?",
+          //   needReply: false,
+          //   acceptText: "Yes",
+          //   rejectText: "No",
+          //   author: "BIE YAQING",
+          //   avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
+          //   date : "2017-11-08T03:38:55Z"
+          // }, {
+          //   topicId: 3,
+          //   title: "Notification to Khoa",
+          //   content: "Tell me where are you!",
+          //   needReply: true,
+          //   acceptText: "Yes",
+          //   rejectText: "No",
+          //   author: "BIE YAQING",
+          //   avatar: "https://s3-ap-southeast-1.amazonaws.com/com.viatick/smrt/smrt/1509415183877acc_2.png",
+          //   date : "2017-11-08T03:38:55Z"
+          // }
+        ];
       }
     });
   };
@@ -97,9 +112,11 @@ export class NotificationsPage {
           for(var o in this.topics) {
             let topic = this.topics[o];
             if(topic.topicId == this.chosenTopicId) {
-              this.topics[o].message = `Replied: ${acceptText}`;
-              this.chosenTopicId = 0;
-              this.saveNotifications();
+              this.sendMessageRequest(acceptText, true, topic.topicId, () => {
+                this.topics[o].message = `Replied: ${acceptText}`;
+                this.chosenTopicId = 0;
+                this.saveNotifications();
+              });
               break;
             }
           }
@@ -112,9 +129,11 @@ export class NotificationsPage {
           for(var o in this.topics) {
             let topic = this.topics[o];
             if(topic.topicId == this.chosenTopicId) {
-              this.topics[o].message = `Replied: ${rejectText}`;
-              this.chosenTopicId = 0;
-              this.saveNotifications();
+              this.sendMessageRequest(rejectText, false, topic.topicId, () => {
+                this.topics[o].message = `Replied: ${rejectText}`;
+                this.chosenTopicId = 0;
+                this.saveNotifications();
+              });
               break;
             }
           }
@@ -135,11 +154,13 @@ export class NotificationsPage {
     for(var o in this.topics) {
       let topic = this.topics[o];
       if(topic.topicId == this.chosenTopicId) {
-        this.topics[o].message = `Replied: ${this.messageForm.message}`;
-        this.saveNotifications();
-        this.chosenTopicId = 0;
-        this.messageForm.message = "";
-        this.messageForm.showInput = false;
+        this.sendMessageRequest(this.messageForm.message, true, topic.topicId, () => {
+          this.topics[o].message = `Replied: ${this.messageForm.message}`;
+          this.saveNotifications();
+          this.chosenTopicId = 0;
+          this.messageForm.message = "";
+          this.messageForm.showInput = false;
+        });
         break;
       }
     }
@@ -166,6 +187,48 @@ export class NotificationsPage {
   private clearAllMessages = function() {
     this.storage.remove('SMRT_NOTIFICATIONS').then((val) => {
       this.topics= [];
+    });
+  };
+
+  private sendMessageRequest = function(content: string, choice: boolean, topicId: number, success: any) {
+    let input = {
+      deviceId: this.device.deviceId,
+      content: content,
+      choice: choice,
+      topicId: topicId
+    };
+    console.log("input", input);
+    this.api.sendRequest("SendMessage", -1, null, input, (res) => {
+      console.log("send message request", res);
+      success();
+    }, (err) => {
+      this.presentToast(err);
+    });
+  };
+
+  ionViewWillLeave() {
+    console.log("view will leave", "notifications");
+  }
+
+  private onInputCancel = function(evt) {
+    this.chosenTopicId = 0;
+    this.messageForm.message = "";
+    this.messageForm.showInput = false;
+  };
+
+  private checkLogin = function(success: any, fail: any) {
+    this.storage.get('SMRT_DEVICE').then((val) => {
+      console.log('SMRT_DEVICE', val);
+      if(val) {
+        this.device = val;
+        if(this.device.account) {
+          success();
+        } else {
+          fail();
+        }
+      } else {
+        fail();
+      }
     });
   };
 

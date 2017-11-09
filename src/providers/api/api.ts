@@ -43,6 +43,11 @@ export class ApiProvider {
         method: "PUT",
         secret: "00notification00",
         link: "/service/asset/register"
+      }, {
+        name: "SendMessage",
+        method: "POST",
+        secret: "00notification00",
+        link: "/service/asset/message"
       }]
     };
   }

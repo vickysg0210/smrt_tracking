@@ -26,7 +26,7 @@
 <ion-footer *ngIf="messageForm.showInput">
   <ion-toolbar>
     <form (submit)="sendMessage()">
-      <ion-searchbar placeholder="Type your message" [(ngModel)]="messageForm.message" name="message" ></ion-searchbar>
+      <ion-searchbar placeholder="Type your message" showCancelButton="true" [(ngModel)]="messageForm.message" name="message" (ionCancel)="onInputCancel($event)"></ion-searchbar>
     </form>
   </ion-toolbar>
 </ion-footer>

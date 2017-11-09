@@ -29,6 +29,11 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
+
+  }
+
+  ionViewDidEnter() {
+    console.log("view did enter", "home");
     this.checkLogin(() => {
       this.navCtrl.push(this.trackingPage);
     }, () => {
@@ -89,4 +94,8 @@ export class HomePage {
       }
     });
   };
+
+  ionViewWillLeave() {
+    console.log("view will leave", "home");
+  }
 }

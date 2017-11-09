@@ -74,7 +74,13 @@ export class TrackingPage{
   }
 
   ionViewDidLoad() {
+
+  }
+
+  ionViewDidEnter() {
+    console.log("view did enter", "tracking");
     this.checkLogin(() => {
+      this.loadNotifications();
       this.processDeviceData();
       this.beaconScanning();
       this.getBeaconRegion();
@@ -147,9 +153,18 @@ export class TrackingPage{
     this.storage.get('SMRT_NOTIFICATIONS').then((val) => {
       console.log('SMRT_NOTIFICATIONS', val);
       if(val) {
-        val.push(topic);
-        this.messageCount = val.length + 1;
-        this.storage.set('SMRT_NOTIFICATIONS', val);
+        this.messageCount = val.length;
+        let isExist = false;
+        for(var o in val) {
+          if(val[o].topicId == topic.topicId) {
+            isExist = true;
+          }
+        }
+        if(!isExist) {
+          val.push(topic);
+          this.messageCount += 1;
+          this.storage.set('SMRT_NOTIFICATIONS', val);
+        }
       } else {
         let notifications = [topic];
         this.messageCount = 1;
@@ -166,7 +181,7 @@ export class TrackingPage{
     this.api.sendRequest("DeviceToken", this.device.deviceId, null, input, (res) => {
       console.log("this.deviceToken", res);
     }, (err) => {
-      this.presentToast(err);
+      this.presentToast("DeviceToken: " + err);
     });
   };
 
@@ -303,7 +318,7 @@ export class TrackingPage{
         console.log(e);
       }
     }, (err) => {
-      this.presentToast(err);
+      this.presentToast("BeaconRegion: " + err);
     });
   };
 
@@ -352,7 +367,7 @@ export class TrackingPage{
         this.logout();
       }
     }, (err) => {
-      this.presentToast(err);
+      this.presentToast("SyncDevice: " + err);
     });
   };
 
@@ -384,6 +399,7 @@ export class TrackingPage{
   };
 
   ionViewWillLeave() {
+    console.log("view will leave", "tracking");
     try {
       this.backgroundMode.disable();
       this.ibeacon.stopMonitoringForRegion(this.beaconRegion).then(() => {
