@@ -124,7 +124,7 @@ var NotificationsPage = (function () {
         };
         this.processReply = function (idx) {
             this.chosenTopicId = idx;
-            console.log(this.chosenTopicId);
+            // console.log(this.chosenTopicId);
             for (var o in this.topics) {
                 var topic = this.topics[o];
                 if (topic.topicId == this.chosenTopicId) {
@@ -154,7 +154,7 @@ var NotificationsPage = (function () {
                 choice: choice,
                 topicId: topicId
             };
-            console.log("input", input);
+            // console.log("input", input);
             this.api.sendRequest("SendMessage", -1, null, input, function (res) {
                 console.log("send message request", res);
                 success();
@@ -343,7 +343,7 @@ var TrackingPage = (function () {
             if (typeof (topic.needReply) == 'string') {
                 topic.needReply = topic.needReply == 'true';
             }
-            console.log("topic", topic);
+            // console.log("topic", topic);
             this.storage.get('SMRT_NOTIFICATIONS').then(function (val) {
                 console.log('SMRT_NOTIFICATIONS', val);
                 if (val) {
