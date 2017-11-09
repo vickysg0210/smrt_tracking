@@ -8,7 +8,7 @@
 </ion-header>
 <ion-content padding>
   <ion-list>
-    <ion-item class="topic" *ngFor="let topic of topics" (click)="processReply(topic.topicId)">
+    <ion-item class="topic" *ngFor="let topic of topics|sort:['topicId', true]" (click)="processReply(topic.topicId)">
       <ion-avatar item-start>
         <img [src]="topic.avatar">
       </ion-avatar>

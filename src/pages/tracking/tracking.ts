@@ -116,11 +116,11 @@ export class TrackingPage{
       };
       const pushObject: PushObject = this.push.init(options);
       pushObject.on('notification').subscribe((notification: any) => {
-        // console.log('Received a notification', JSON.stringify(notification));
+        console.log('Received a notification', JSON.stringify(notification));
         this.storeNotification(notification);
       });
       pushObject.on('registration').subscribe((registration: any) => {
-        // console.log('Device registered', JSON.stringify(registration));
+        console.log('Device registered', JSON.stringify(registration));
         this.updatePushToken(registration);
       });
       pushObject.on('error').subscribe((error) => {
@@ -143,8 +143,9 @@ export class TrackingPage{
   };
 
   private storeNotification = function(data) {
+    console.log("storeNotification data", data);
     let topic = {
-      topicId: data.additionalData.topicId,
+      topicId: Number(data.additionalData.topicId),
       title: data.title,
       content: data.message,
       needReply: data.additionalData.needReply,
@@ -153,6 +154,10 @@ export class TrackingPage{
       author: data.additionalData.author,
       avatar: data.additionalData.avatar
     };
+    if(typeof(topic.needReply) == 'string') {
+      topic.needReply = topic.needReply == 'true';
+    }
+    // console.log("topic", topic);
     this.storage.get('SMRT_NOTIFICATIONS').then((val) => {
       console.log('SMRT_NOTIFICATIONS', val);
       if(val) {
@@ -337,9 +342,9 @@ export class TrackingPage{
     for(var o in beacons) {
       let beacon = beacons[o];
       inputBeacons.push({
-        uuid: beacon.uuid,
-        major: beacon.major,
-        minor: beacon.minor,
+        uuid: beacon.uuid.toUpperCase(),
+        major: Number(beacon.major),
+        minor: Number(beacon.minor),
         distance: beacon.accuracy
       });
     }

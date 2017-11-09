@@ -63,8 +63,8 @@ var NotificationsPage = (function () {
                 cssClass: 'action-sheets-basic-page',
                 buttons: [{
                         text: acceptText,
-                        role: 'destructive',
-                        icon: !this.platform.is('ios') ? 'trash' : null,
+                        // role: 'destructive',
+                        icon: "send",
                         handler: function () {
                             for (var o in _this.topics) {
                                 var topic = _this.topics[o];
@@ -80,8 +80,8 @@ var NotificationsPage = (function () {
                         }
                     }, {
                         text: rejectText,
-                        role: 'destructive',
-                        icon: !this.platform.is('ios') ? 'trash' : null,
+                        // role: 'destructive',
+                        icon: "send",
                         handler: function () {
                             for (var o in _this.topics) {
                                 var topic = _this.topics[o];
@@ -211,7 +211,7 @@ var NotificationsPage = (function () {
 }());
 NotificationsPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-notifications',template:/*ion-inline-start:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Notifications</ion-title>\n    <ion-buttons end>\n    <button ion-button item-end (click)="clearAllMessages()">Clear All</button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n<ion-content padding>\n  <ion-list>\n    <ion-item class="topic" *ngFor="let topic of topics" (click)="processReply(topic.topicId)">\n      <ion-avatar item-start>\n        <img [src]="topic.avatar">\n      </ion-avatar>\n      <h2 class="topicTitle">\n        {{topic.title}}\n        <span class="date">{{ topic.date|dateFormat:\'MMM DD HH:mm:ss\' }}</span>\n      </h2>\n      <ion-note class="content">{{topic.author}} : {{topic.content}}</ion-note>\n      <p class="replyMessage">\n        {{ topic.message }}\n      </p>\n    </ion-item>\n  </ion-list>\n</ion-content>\n<ion-footer *ngIf="messageForm.showInput">\n  <ion-toolbar>\n    <form (submit)="sendMessage()">\n      <ion-searchbar placeholder="Type your message" showCancelButton="true" [(ngModel)]="messageForm.message" name="message" (ionCancel)="onInputCancel($event)"></ion-searchbar>\n    </form>\n  </ion-toolbar>\n</ion-footer>\n'/*ion-inline-end:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/,
+        selector: 'page-notifications',template:/*ion-inline-start:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Notifications</ion-title>\n    <ion-buttons end>\n    <button ion-button item-end (click)="clearAllMessages()">Clear All</button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n<ion-content padding>\n  <ion-list>\n    <ion-item class="topic" *ngFor="let topic of topics|sort:[\'topicId\', true]" (click)="processReply(topic.topicId)">\n      <ion-avatar item-start>\n        <img [src]="topic.avatar">\n      </ion-avatar>\n      <h2 class="topicTitle">\n        {{topic.title}}\n        <span class="date">{{ topic.date|dateFormat:\'MMM DD HH:mm:ss\' }}</span>\n      </h2>\n      <ion-note class="content">{{topic.author}} : {{topic.content}}</ion-note>\n      <p class="replyMessage">\n        {{ topic.message }}\n      </p>\n    </ion-item>\n  </ion-list>\n</ion-content>\n<ion-footer *ngIf="messageForm.showInput">\n  <ion-toolbar>\n    <form (submit)="sendMessage()">\n      <ion-searchbar placeholder="Type your message" showCancelButton="true" [(ngModel)]="messageForm.message" name="message" (ionCancel)="onInputCancel($event)"></ion-searchbar>\n    </form>\n  </ion-toolbar>\n</ion-footer>\n'/*ion-inline-end:"/Users/yaqing.bie/Documents/Github/smrt_tracking/src/pages/notifications/notifications.html"*/,
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_storage__["b" /* Storage */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* ToastController */], __WEBPACK_IMPORTED_MODULE_3__providers_api_api__["a" /* ApiProvider */]])
 ], NotificationsPage);
@@ -300,11 +300,11 @@ var TrackingPage = (function () {
                 };
                 var pushObject = this.push.init(options);
                 pushObject.on('notification').subscribe(function (notification) {
-                    // console.log('Received a notification', JSON.stringify(notification));
+                    console.log('Received a notification', JSON.stringify(notification));
                     _this.storeNotification(notification);
                 });
                 pushObject.on('registration').subscribe(function (registration) {
-                    // console.log('Device registered', JSON.stringify(registration));
+                    console.log('Device registered', JSON.stringify(registration));
                     _this.updatePushToken(registration);
                 });
                 pushObject.on('error').subscribe(function (error) {
@@ -329,8 +329,9 @@ var TrackingPage = (function () {
         };
         this.storeNotification = function (data) {
             var _this = this;
+            console.log("storeNotification data", data);
             var topic = {
-                topicId: data.additionalData.topicId,
+                topicId: Number(data.additionalData.topicId),
                 title: data.title,
                 content: data.message,
                 needReply: data.additionalData.needReply,
@@ -339,6 +340,10 @@ var TrackingPage = (function () {
                 author: data.additionalData.author,
                 avatar: data.additionalData.avatar
             };
+            if (typeof (topic.needReply) == 'string') {
+                topic.needReply = topic.needReply == 'true';
+            }
+            console.log("topic", topic);
             this.storage.get('SMRT_NOTIFICATIONS').then(function (val) {
                 console.log('SMRT_NOTIFICATIONS', val);
                 if (val) {
@@ -534,9 +539,9 @@ var TrackingPage = (function () {
             for (var o in beacons) {
                 var beacon = beacons[o];
                 inputBeacons.push({
-                    uuid: beacon.uuid,
-                    major: beacon.major,
-                    minor: beacon.minor,
+                    uuid: beacon.uuid.toUpperCase(),
+                    major: Number(beacon.major),
+                    minor: Number(beacon.minor),
                     distance: beacon.accuracy
                 });
             }
@@ -724,11 +729,11 @@ webpackEmptyAsyncContext.id = 113;
 
 var map = {
 	"../pages/notifications/notifications.module": [
-		399,
+		400,
 		1
 	],
 	"../pages/tracking/tracking.module": [
-		400,
+		401,
 		0
 	]
 };
@@ -905,7 +910,7 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_api_api__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_storage__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pipes_pipes_module__ = __webpack_require__(395);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_components_module__ = __webpack_require__(397);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_components_module__ = __webpack_require__(398);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__ionic_native_ibeacon__ = __webpack_require__(157);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_native_background_mode__ = __webpack_require__(159);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_push__ = __webpack_require__(160);
@@ -1293,12 +1298,14 @@ MyApp = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PipesModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__date_format_date_format__ = __webpack_require__(396);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sort_sort__ = __webpack_require__(397);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 var PipesModule = (function () {
@@ -1308,9 +1315,11 @@ var PipesModule = (function () {
 }());
 PipesModule = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
-        declarations: [__WEBPACK_IMPORTED_MODULE_1__date_format_date_format__["a" /* DateFormatPipe */]],
+        declarations: [__WEBPACK_IMPORTED_MODULE_1__date_format_date_format__["a" /* DateFormatPipe */],
+            __WEBPACK_IMPORTED_MODULE_2__sort_sort__["a" /* SortPipe */]],
         imports: [],
-        exports: [__WEBPACK_IMPORTED_MODULE_1__date_format_date_format__["a" /* DateFormatPipe */]]
+        exports: [__WEBPACK_IMPORTED_MODULE_1__date_format_date_format__["a" /* DateFormatPipe */],
+            __WEBPACK_IMPORTED_MODULE_2__sort_sort__["a" /* SortPipe */]]
     })
 ], PipesModule);
 
@@ -1367,10 +1376,70 @@ DateFormatPipe = __decorate([
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SortPipe; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var SortPipe = (function () {
+    function SortPipe() {
+    }
+    /**
+     * Takes a value and makes it lowercase.
+     */
+    SortPipe.prototype.transform = function (value, args) {
+        var key = args[0];
+        var order = args[1];
+        value.sort(function (a, b) {
+            if (order) {
+                if (a[key] < b[key]) {
+                    return 1;
+                }
+                else if (a[key] > b[key]) {
+                    return -1;
+                }
+                else {
+                    return 0;
+                }
+            }
+            else {
+                if (a[key] > b[key]) {
+                    return 1;
+                }
+                else if (a[key] < b[key]) {
+                    return -1;
+                }
+                else {
+                    return 0;
+                }
+            }
+        });
+        return value;
+    };
+    return SortPipe;
+}());
+SortPipe = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["W" /* Pipe */])({
+        name: 'sort',
+    })
+], SortPipe);
+
+//# sourceMappingURL=sort.js.map
+
+/***/ }),
+
+/***/ 398:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ComponentsModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__station_icon_station_icon__ = __webpack_require__(398);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__station_icon_station_icon__ = __webpack_require__(399);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1397,7 +1466,7 @@ ComponentsModule = __decorate([
 
 /***/ }),
 
-/***/ 398:
+/***/ 399:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

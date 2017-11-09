@@ -106,8 +106,8 @@ export class NotificationsPage {
       cssClass: 'action-sheets-basic-page',
       buttons: [{
         text: acceptText,
-        role: 'destructive',
-        icon: !this.platform.is('ios') ? 'trash' : null,
+        // role: 'destructive',
+        icon: "send",
         handler: () => {
           for(var o in this.topics) {
             let topic = this.topics[o];
@@ -123,8 +123,8 @@ export class NotificationsPage {
         }
       }, {
         text: rejectText,
-        role: 'destructive',
-        icon: !this.platform.is('ios') ? 'trash' : null,
+        // role: 'destructive',
+        icon: "send",
         handler: () => {
           for(var o in this.topics) {
             let topic = this.topics[o];
@@ -168,7 +168,7 @@ export class NotificationsPage {
 
   private processReply = function(idx: number) {
     this.chosenTopicId = idx;
-    console.log(this.chosenTopicId);
+    // console.log(this.chosenTopicId);
     for(var o in this.topics) {
       let topic = this.topics[o];
       if(topic.topicId == this.chosenTopicId) {
@@ -197,7 +197,7 @@ export class NotificationsPage {
       choice: choice,
       topicId: topicId
     };
-    console.log("input", input);
+    // console.log("input", input);
     this.api.sendRequest("SendMessage", -1, null, input, (res) => {
       console.log("send message request", res);
       success();
