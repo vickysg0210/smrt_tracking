@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "831830222867",
+    "firebase_url": "https://smrt-tracking-185508.firebaseio.com",
+    "project_id": "smrt-tracking-185508",
+    "storage_bucket": "smrt-tracking-185508.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831830222867:android:a9b483abe4d0edf7",
+        "android_client_info": {
+          "package_name": "smrt.viatick.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831830222867-07jqbnkejs7kiutvbcd2sed39jvh8i6r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTOYFdjAKL_ojq_pdaEiH9Ie47DumfMyY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

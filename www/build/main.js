@@ -284,7 +284,10 @@ var TrackingPage = (function () {
                     }
                 });
                 var options = {
-                    android: {},
+                    android: {
+                        sound: true,
+                        vibrate: true,
+                    },
                     ios: {
                         alert: true,
                         badge: true,

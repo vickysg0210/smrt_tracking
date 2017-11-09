@@ -10,6 +10,9 @@
     "com.unarin.cordova.beacon": {
       "PACKAGE_NAME": "smrt.viatick.com"
     },
+    "cordova-plugin-background-mode": {
+      "PACKAGE_NAME": "smrt.viatick.com"
+    },
     "cordova-plugin-device": {
       "PACKAGE_NAME": "smrt.viatick.com"
     },
@@ -29,9 +32,6 @@
       "PACKAGE_NAME": "smrt.viatick.com"
     },
     "ionic-plugin-keyboard": {
-      "PACKAGE_NAME": "smrt.viatick.com"
-    },
-    "cordova-plugin-background-mode": {
       "PACKAGE_NAME": "smrt.viatick.com"
     },
     "phonegap-plugin-push": {

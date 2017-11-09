@@ -59,6 +59,15 @@ module.exports = [
     ]
   },
   {
+    "id": "cordova-plugin-background-mode.BackgroundMode",
+    "file": "plugins/cordova-plugin-background-mode/www/background-mode.js",
+    "pluginId": "cordova-plugin-background-mode",
+    "clobbers": [
+      "cordova.plugins.backgroundMode",
+      "plugin.backgroundMode"
+    ]
+  },
+  {
     "id": "cordova-plugin-splashscreen.SplashScreen",
     "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
     "pluginId": "cordova-plugin-splashscreen",
@@ -92,15 +101,6 @@ module.exports = [
     "runs": true
   },
   {
-    "id": "cordova-plugin-background-mode.BackgroundMode",
-    "file": "plugins/cordova-plugin-background-mode/www/background-mode.js",
-    "pluginId": "cordova-plugin-background-mode",
-    "clobbers": [
-      "cordova.plugins.backgroundMode",
-      "plugin.backgroundMode"
-    ]
-  },
-  {
     "id": "phonegap-plugin-push.PushNotification",
     "file": "plugins/phonegap-plugin-push/www/push.js",
     "pluginId": "phonegap-plugin-push",
@@ -114,13 +114,13 @@ module.exports.metadata =
 {
   "com.unarin.cordova.beacon": "3.5.2",
   "cordova-plugin-device": "1.1.4",
+  "cordova-plugin-background-mode": "0.7.2",
   "cordova-plugin-ionic-webview": "1.1.16",
   "cordova-plugin-splashscreen": "4.0.3",
   "cordova-plugin-statusbar": "2.2.4-dev",
   "cordova-plugin-whitelist": "1.3.1",
   "cordova-sqlite-storage": "2.1.0",
   "ionic-plugin-keyboard": "2.2.1",
-  "cordova-plugin-background-mode": "0.7.2",
   "phonegap-plugin-push": "2.1.0"
 };
 // BOTTOM OF METADATA

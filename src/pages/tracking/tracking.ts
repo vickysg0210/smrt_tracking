@@ -100,7 +100,10 @@ export class TrackingPage{
         }
       });
       const options: PushOptions = {
-        android: {},
+        android: {
+          sound: true,
+          vibrate: true,
+        },
         ios: {
           alert: true,
           badge: true,

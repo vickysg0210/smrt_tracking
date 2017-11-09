@@ -25541,8 +25541,8 @@ station-icon .station-icon .color-code:last-child {
 }
 
 .loginBackground {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.6)), to(rgba(255, 255, 255, 0.6))), url("../../images/background.jpg");
-  background-image: linear-gradient(rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.6) 100%), url("../../images/background.jpg");
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.6)), to(rgba(255, 255, 255, 0.6))), url("../assets/img/background.jpg");
+  background-image: linear-gradient(rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.6) 100%), url("../assets/img/background.jpg");
   background-size: cover;
 }
 
@@ -25573,6 +25573,7 @@ page-notifications .topic .date {
   color: DarkGray;
   font-size: 10px;
   float: right;
+  line-height: 14px;
 }
 
 page-notifications .topic .topicTitle {
@@ -25637,6 +25638,10 @@ page-tracking .tracking .stations .station .name {
   color: Grey;
 }
 
+page-tracking .tracking .section {
+  padding-top: 10px;
+}
+
 page-tracking .tracking .section .title {
   text-align: center;
   font-weight: bold;
@@ -25659,6 +25664,21 @@ page-tracking .tracking .section .info-sm {
   font-weight: bold;
   color: Grey;
   margin-bottom: 20px;
+}
+
+page-tracking .tracking .section.save_zone {
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#66ffb3));
+  background: linear-gradient(#ffffff, #66ffb3);
+}
+
+page-tracking .tracking .section.warning_zone {
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ffe680));
+  background: linear-gradient(#ffffff, #ffe680);
+}
+
+page-tracking .tracking .section.danger_zone {
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ff9999));
+  background: linear-gradient(#ffffff, #ff9999);
 }
 
 page-tracking .headerLable {
