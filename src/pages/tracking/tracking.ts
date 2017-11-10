@@ -51,6 +51,8 @@ export class TrackingPage{
     trackingAgo: string
   };
 
+  private beaconHisMap: any;
+
   constructor(public navCtrl: NavController, private api: ApiProvider, private toastCtrl: ToastController, public navParams: NavParams, private storage: Storage, private ibeacon: IBeacon, private backgroundMode: BackgroundMode, private ar : ApplicationRef, private push: Push) {
     this.navCtrl = navCtrl;
     this.navParams = navParams;
@@ -71,6 +73,7 @@ export class TrackingPage{
     this.stations = [];
     this.counter = 5;
     this.messageCount = 0;
+    this.beaconHisMap = {};
   }
 
   ionViewDidLoad() {
@@ -341,12 +344,25 @@ export class TrackingPage{
     let inputBeacons = [];
     for(var o in beacons) {
       let beacon = beacons[o];
-      inputBeacons.push({
+      let bd = {
         uuid: beacon.uuid.toUpperCase(),
         major: Number(beacon.major),
         minor: Number(beacon.minor),
         distance: beacon.accuracy
-      });
+      };
+      // TODO buffer!!
+      if(bd.distance == -1) {
+        let distance = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
+        if(distance) {
+          if(distance < 40) {
+            bd.distance = distance;
+          }
+        }
+      } else {
+        this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`] = bd.distance;
+      }
+      // end buffer!!
+      inputBeacons.push(bd);
     }
     let input = {
       deviceId: this.device.deviceId,

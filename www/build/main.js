@@ -527,6 +527,7 @@ var TrackingPage = (function () {
                 _this.presentToast("BeaconRegion: " + err);
             });
         };
+        // TODO test!!
         this.sendBeaconRecords = function (beacons) {
             // console.log("beacons", JSON.stringify(beacons));
             if (this.counter == 5) {
@@ -538,12 +539,24 @@ var TrackingPage = (function () {
             var inputBeacons = [];
             for (var o in beacons) {
                 var beacon = beacons[o];
-                inputBeacons.push({
+                var bd = {
                     uuid: beacon.uuid.toUpperCase(),
                     major: Number(beacon.major),
                     minor: Number(beacon.minor),
                     distance: beacon.accuracy
-                });
+                };
+                if (bd.distance == -1) {
+                    var distance = this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor];
+                    if (distance) {
+                        if (distance < 40) {
+                            bd.distance = distance;
+                        }
+                    }
+                }
+                else {
+                    this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor] = bd.distance;
+                }
+                inputBeacons.push(bd);
             }
             var input = {
                 deviceId: this.device.deviceId,
@@ -659,6 +672,7 @@ var TrackingPage = (function () {
         this.stations = [];
         this.counter = 5;
         this.messageCount = 0;
+        this.beaconHisMap = {};
     }
     TrackingPage.prototype.ionViewDidLoad = function () {
     };
