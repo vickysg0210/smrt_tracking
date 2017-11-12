@@ -1,0 +1,60 @@
+<h1>Dashboard</h1>
+
+<mat-toolbar>
+  <button mat-button [matMenuTriggerFor]="menu">Track Number</button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item *ngFor ="let track of tracks; index as i" (click) ="processTrackNumber(i)">{{track.name}}</button>
+  </mat-menu>
+  <div class="button-row">
+    <button mat-raised-button>Day</button>
+    <button mat-raised-button>Month</button>
+    <button mat-raised-button>Year</button>
+  </div>
+</mat-toolbar>
+<mat-grid-list cols="3" rowHeight="4:3">
+  <mat-grid-tile>
+    <mat-card class="activeNodes">
+      <mat-card-header>
+      <mat-card-title># Active nodes in {{this.track.name}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>100 Nodes</mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-card class="activeWorkers">
+      <mat-card-header>
+      <mat-card-title># Active workers in {{this.track.name}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>203 Workers</mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-card class="totalDevices">
+      <mat-card-header>
+      <mat-card-title># Total Devices of {{this.track.name}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>1000 devices</mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+  <mat-grid-tile class="concentile" [colspan] = "2">
+    <div>
+      <h3 style="display: block; text-align:center">Worker Concentration</h3>
+      <div style="display: block">
+      <canvas baseChart
+              [datasets]="barChartData"
+              [labels]="barChartLabels"
+              [options]="barChartOptions"
+              [legend]="barChartLegend"
+            [chartType]="barChartType"></canvas>
+      </div>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-card class="attendanceRate">
+      <mat-card-header>
+      <mat-card-title># Attendance Rate of {{this.track.name}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>60 %</mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
