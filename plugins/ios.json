@@ -36,7 +36,14 @@
     },
     "phonegap-plugin-push": {
       "PACKAGE_NAME": "smrt.viatick.com"
+    },
+    "de.appplant.cordova.plugin.local-notification": {
+      "PACKAGE_NAME": "smrt.viatick.com"
     }
   },
-  "dependent_plugins": {}
+  "dependent_plugins": {
+    "cordova-plugin-app-event": {
+      "PACKAGE_NAME": "smrt.viatick.com"
+    }
+  }
 }

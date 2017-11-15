@@ -18,6 +18,7 @@ import { ComponentsModule } from '../components/components.module';
 import { IBeacon } from '@ionic-native/ibeacon';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { Push } from '@ionic-native/push';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { Push } from '@ionic-native/push';
     ApiProvider,
     IBeacon,
     BackgroundMode,
-    Push
+    Push,
+    LocalNotifications
   ]
 })
 export class AppModule {}

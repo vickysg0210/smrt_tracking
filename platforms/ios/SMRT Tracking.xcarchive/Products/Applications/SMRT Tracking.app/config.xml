@@ -49,6 +49,10 @@
     <feature name="PushNotification">
         <param name="ios-package" value="PushPlugin" />
     </feature>
+    <feature name="LocalNotification">
+        <param name="ios-package" onload="true" value="APPLocalNotification" />
+        <param name="onload" value="true" />
+    </feature>
     <name>SMRT Tracking</name>
     <description>SMRT track tracking</description>
     <author email="developer@viatick.com" href="https://www.viatick.com/">Viatick Development Team</author>

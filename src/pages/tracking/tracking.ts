@@ -9,6 +9,7 @@ import { Storage } from '@ionic/storage';
 import { IBeacon } from '@ionic-native/ibeacon';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import moment from 'moment';
 
@@ -53,7 +54,7 @@ export class TrackingPage{
 
   private beaconHisMap: any;
 
-  constructor(public navCtrl: NavController, private api: ApiProvider, private toastCtrl: ToastController, public navParams: NavParams, private storage: Storage, private ibeacon: IBeacon, private backgroundMode: BackgroundMode, private ar : ApplicationRef, private push: Push) {
+  constructor(public navCtrl: NavController, private api: ApiProvider, private toastCtrl: ToastController, public navParams: NavParams, private storage: Storage, private ibeacon: IBeacon, private backgroundMode: BackgroundMode, private ar : ApplicationRef, private push: Push, private localNotifications: LocalNotifications) {
     this.navCtrl = navCtrl;
     this.navParams = navParams;
     this.page = {
@@ -269,7 +270,14 @@ export class TrackingPage{
       if(this.device.account.tracking) {
         this.page.trackingType = this.device.account.tracking.type;
         if(this.device.account.tracking.section) {
-          this.page.sectionName = this.device.account.tracking.section.name;
+          let newSectionName = this.device.account.tracking.section.name;
+          if(this.page.sectionName != newSectionName) {
+            // Section changed!
+            let title = "Zone Change";
+            let text = `You are entering ${this.page.trackingType} ${newSectionName}!`;
+            this.alertNotification(title, text);
+          }
+          this.page.sectionName = newSectionName;
         } else {
           this.page.sectionName = "";
         }
@@ -354,8 +362,9 @@ export class TrackingPage{
       if(bd.distance == -1) {
         let distance = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
         if(distance) {
-          if(distance < 40) {
+          if(distance < 60) {
             bd.distance = distance;
+            this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`] = distance + 5;
           }
         }
       } else {
@@ -452,6 +461,16 @@ export class TrackingPage{
           fail();
         }
       }
+    });
+  };
+
+  private alertNotification = function(title: string, text: string) {
+    this.localNotifications.schedule({
+      id: new Date().getTime(),
+      title: title,
+      text: text,
+      sound: 'file://beep.caf',
+      data: {}
     });
   };
 

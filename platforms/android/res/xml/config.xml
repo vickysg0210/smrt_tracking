@@ -31,6 +31,9 @@
     <feature name="PushNotification">
         <param name="android-package" value="com.adobe.phonegap.push.PushPlugin" />
     </feature>
+    <feature name="LocalNotification">
+        <param name="android-package" value="de.appplant.cordova.plugin.localnotification.LocalNotification" />
+    </feature>
     <name>SMRT Tracking</name>
     <description>SMRT track tracking</description>
     <author email="developer@viatick.com" href="https://www.viatick.com/">Viatick Development Team</author>
