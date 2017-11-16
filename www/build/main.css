@@ -25666,7 +25666,7 @@ page-tracking .tracking .section .info-sm {
   margin-bottom: 20px;
 }
 
-page-tracking .tracking .section.save_zone {
+page-tracking .tracking .section.safe_zone {
   background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#66ffb3));
   background: linear-gradient(#ffffff, #66ffb3);
 }
