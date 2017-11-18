@@ -350,6 +350,7 @@ export class TrackingPage{
     }
     this.counter += 1;
     let inputBeacons = [];
+    // TODO buffer!!
     for(var o in beacons) {
       let beacon = beacons[o];
       let bd = {
@@ -358,25 +359,96 @@ export class TrackingPage{
         minor: Number(beacon.minor),
         distance: beacon.accuracy
       };
-      // TODO buffer!!
+      // if(bd.distance == -1) {
+      //   let distance = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
+      //   if(distance) {
+      //     if(distance < 50) {
+      //       bd.distance = distance;
+      //       this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`] = distance + 5;
+      //     }
+      //   }
+      // } else {
+      //   this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`] = bd.distance;
+      // }
+      // inputBeacons.push(bd);
       if(bd.distance == -1) {
-        let distance = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
-        if(distance) {
-          if(distance < 60) {
-            bd.distance = distance;
-            this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`] = distance + 5;
+        let distances = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
+        if(distances) {
+          if(distances.length) {
+            let distance = distances[distances.length - 1];
+            this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].push(distance + 5);
+            if(this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].length > 5) {
+              this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].shift();
+            }
           }
         }
       } else {
-        this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`] = bd.distance;
+        let distances = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
+        if(distances) {
+          this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].push(bd.distance);
+          if(this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].length > 5) {
+            this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].shift();
+          }
+        } else {
+          this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`] = [bd.distance];
+        }
       }
-      // end buffer!!
-      inputBeacons.push(bd);
+      // averaging!
+      let distances = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
+      if(distances.length) {
+        let sum = 0;
+        for(var o in distances) {
+          let d = distances[o];
+          sum += d;
+        }
+        bd.distance = sum / distances.length;
+        // console.log("arr", JSON.stringify(distances));
+        // console.log("bd", JSON.stringify(bd));
+        inputBeacons.push(bd);
+      }
     }
+    let finalBeacons = [];
+    let keys = Object.keys(this.beaconHisMap);
+    for(var o in keys) {
+      let k = keys[o];
+      let v = this.beaconHisMap[k];
+      let newRec = false;
+      for(var p in inputBeacons) {
+        let bd = inputBeacons[p];
+        let bk = `${bd.uuid}_${bd.major}_${bd.minor}`;
+        if(bk == k) {
+          newRec = true;
+          break;
+        }
+      }
+      if(!newRec) {
+        if(v.length) {
+          this.beaconHisMap[k].shift();
+        }
+      }
+      // console.log("beacon history", k, v, newRec);
+      if(v.length) {
+        let sum = 0;
+        for(var p in v) {
+          let d = v[p];
+          sum += d;
+        }
+        // console.log("average", sum, v.length);
+        finalBeacons.push({
+          uuid: k.split("_")[0],
+          major: Number(k.split("_")[1]),
+          minor: Number(k.split("_")[2]),
+          distance: sum / v.length
+        });
+      }
+    }
+    // console.log("finalBeacons", finalBeacons);
     let input = {
       deviceId: this.device.deviceId,
-      beacons: inputBeacons
+      beacons: finalBeacons
     };
+    // end buffer!!
+    console.log("Input", input);
     this.api.sendRequest("BeaconRecord", -1, null, input, (res) => {
       console.log("BeaconRecord", res);
     }, (err) => {
