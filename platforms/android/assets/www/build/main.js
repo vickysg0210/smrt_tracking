@@ -538,7 +538,30 @@ var TrackingPage = (function () {
             });
         };
         this.sendBeaconRecords = function (beacons) {
-            // console.log("beacons", JSON.stringify(beacons));
+            // testing
+            // beacons.push({
+            //   "minor":30,
+            //   "rssi":0,
+            //   "major":10,
+            //   "proximity":"ProximityFar",
+            //   "accuracy":-1,
+            //   "uuid":"B9407F30-F5F8-466E-AFF9-25556B57FE5A"
+            // }, {
+            //   "minor":40,
+            //   "rssi":0,
+            //   "major":10,
+            //   "proximity":"ProximityFar",
+            //   "accuracy":-1,
+            //   "uuid":"B9407F30-F5F8-466E-AFF9-25556B57FE5A"
+            // }, {
+            //   "minor":50,
+            //   "rssi":0,
+            //   "major":10,
+            //   "proximity":"ProximityFar",
+            //   "accuracy":-1,
+            //   "uuid":"B9407F30-F5F8-466E-AFF9-25556B57FE5A"
+            // });
+            // end of testing
             if (this.counter == 5) {
                 this.counter = 0;
                 this.loadNotifications();
@@ -553,7 +576,7 @@ var TrackingPage = (function () {
                     uuid: beacon.uuid.toUpperCase(),
                     major: Number(beacon.major),
                     minor: Number(beacon.minor),
-                    distance: beacon.accuracy
+                    distance: Number(beacon.accuracy)
                 };
                 // if(bd.distance == -1) {
                 //   let distance = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
@@ -570,7 +593,7 @@ var TrackingPage = (function () {
                 if (bd.distance == -1) {
                     var distances_1 = this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor];
                     if (distances_1) {
-                        if (distances_1.length) {
+                        if (distances_1.length > 0) {
                             var distance = distances_1[distances_1.length - 1];
                             this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor].push(distance + 8);
                             if (this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor].length > 8) {
@@ -593,20 +616,24 @@ var TrackingPage = (function () {
                 }
                 // averaging!
                 var distances = this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor];
-                if (distances.length) {
-                    var sum = 0;
-                    for (var o in distances) {
-                        var d = distances[o];
-                        sum += d;
+                if (distances) {
+                    if (distances.length) {
+                        var sum = 0;
+                        for (var o in distances) {
+                            var d = distances[o];
+                            sum += d;
+                        }
+                        bd.distance = sum / distances.length;
+                        // console.log("arr", JSON.stringify(distances));
+                        // console.log("bd", JSON.stringify(bd));
+                        inputBeacons.push(bd);
                     }
-                    bd.distance = sum / distances.length;
-                    // console.log("arr", JSON.stringify(distances));
-                    // console.log("bd", JSON.stringify(bd));
-                    inputBeacons.push(bd);
                 }
             }
             var finalBeacons = [];
             var keys = Object.keys(this.beaconHisMap);
+            // console.log("inputBeacons", JSON.stringify(inputBeacons));
+            // console.log("this.beaconHisMap", JSON.stringify(this.beaconHisMap));
             for (var o in keys) {
                 var k = keys[o];
                 var v = this.beaconHisMap[k];
