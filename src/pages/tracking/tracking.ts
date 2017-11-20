@@ -342,7 +342,30 @@ export class TrackingPage{
   };
 
   private sendBeaconRecords = function(beacons) {
-    // console.log("beacons", JSON.stringify(beacons));
+    // testing
+    // beacons.push({
+    //   "minor":30,
+    //   "rssi":0,
+    //   "major":10,
+    //   "proximity":"ProximityFar",
+    //   "accuracy":-1,
+    //   "uuid":"B9407F30-F5F8-466E-AFF9-25556B57FE5A"
+    // }, {
+    //   "minor":40,
+    //   "rssi":0,
+    //   "major":10,
+    //   "proximity":"ProximityFar",
+    //   "accuracy":-1,
+    //   "uuid":"B9407F30-F5F8-466E-AFF9-25556B57FE5A"
+    // }, {
+    //   "minor":50,
+    //   "rssi":0,
+    //   "major":10,
+    //   "proximity":"ProximityFar",
+    //   "accuracy":-1,
+    //   "uuid":"B9407F30-F5F8-466E-AFF9-25556B57FE5A"
+    // });
+    // end of testing
     if(this.counter == 5) {
       this.counter = 0;
       this.loadNotifications();
@@ -357,7 +380,7 @@ export class TrackingPage{
         uuid: beacon.uuid.toUpperCase(),
         major: Number(beacon.major),
         minor: Number(beacon.minor),
-        distance: beacon.accuracy
+        distance: Number(beacon.accuracy)
       };
       // if(bd.distance == -1) {
       //   let distance = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
@@ -374,10 +397,10 @@ export class TrackingPage{
       if(bd.distance == -1) {
         let distances = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
         if(distances) {
-          if(distances.length) {
+          if(distances.length > 0) {
             let distance = distances[distances.length - 1];
-            this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].push(distance + 5);
-            if(this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].length > 5) {
+            this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].push(distance + 8);
+            if(this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].length > 8) {
               this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].shift();
             }
           }
@@ -386,7 +409,7 @@ export class TrackingPage{
         let distances = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
         if(distances) {
           this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].push(bd.distance);
-          if(this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].length > 5) {
+          if(this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].length > 8) {
             this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`].shift();
           }
         } else {
@@ -395,20 +418,24 @@ export class TrackingPage{
       }
       // averaging!
       let distances = this.beaconHisMap[`${bd.uuid}_${bd.major}_${bd.minor}`];
-      if(distances.length) {
-        let sum = 0;
-        for(var o in distances) {
-          let d = distances[o];
-          sum += d;
+      if(distances) {
+        if(distances.length) {
+          let sum = 0;
+          for(var o in distances) {
+            let d = distances[o];
+            sum += d;
+          }
+          bd.distance = sum / distances.length;
+          // console.log("arr", JSON.stringify(distances));
+          // console.log("bd", JSON.stringify(bd));
+          inputBeacons.push(bd);
         }
-        bd.distance = sum / distances.length;
-        // console.log("arr", JSON.stringify(distances));
-        // console.log("bd", JSON.stringify(bd));
-        inputBeacons.push(bd);
       }
     }
     let finalBeacons = [];
     let keys = Object.keys(this.beaconHisMap);
+    // console.log("inputBeacons", JSON.stringify(inputBeacons));
+    // console.log("this.beaconHisMap", JSON.stringify(this.beaconHisMap));
     for(var o in keys) {
       let k = keys[o];
       let v = this.beaconHisMap[k];

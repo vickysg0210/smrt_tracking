@@ -572,8 +572,8 @@ var TrackingPage = (function () {
                     if (distances_1) {
                         if (distances_1.length) {
                             var distance = distances_1[distances_1.length - 1];
-                            this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor].push(distance + 5);
-                            if (this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor].length > 5) {
+                            this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor].push(distance + 8);
+                            if (this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor].length > 8) {
                                 this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor].shift();
                             }
                         }
@@ -583,7 +583,7 @@ var TrackingPage = (function () {
                     var distances_2 = this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor];
                     if (distances_2) {
                         this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor].push(bd.distance);
-                        if (this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor].length > 5) {
+                        if (this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor].length > 8) {
                             this.beaconHisMap[bd.uuid + "_" + bd.major + "_" + bd.minor].shift();
                         }
                     }
@@ -631,7 +631,7 @@ var TrackingPage = (function () {
                         var d = v[p];
                         sum += d;
                     }
-                    console.log("average", sum, v.length);
+                    // console.log("average", sum, v.length);
                     finalBeacons.push({
                         uuid: k.split("_")[0],
                         major: Number(k.split("_")[1]),
