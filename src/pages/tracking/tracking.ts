@@ -1,5 +1,5 @@
 import { Component, ApplicationRef } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { NotificationsPage } from '../notifications/notifications';
 import { DeviceInterface } from '../../model/DeviceInterface';
 import { StationInterface } from "../../model/StationInterface";
@@ -54,7 +54,7 @@ export class TrackingPage{
 
   private beaconHisMap: any;
 
-  constructor(public navCtrl: NavController, private api: ApiProvider, private toastCtrl: ToastController, public navParams: NavParams, private storage: Storage, private ibeacon: IBeacon, private backgroundMode: BackgroundMode, private ar : ApplicationRef, private push: Push, private localNotifications: LocalNotifications) {
+  constructor(public navCtrl: NavController, private api: ApiProvider, private toastCtrl: ToastController, public navParams: NavParams, private storage: Storage, private ibeacon: IBeacon, private backgroundMode: BackgroundMode, private ar : ApplicationRef, private push: Push, private localNotifications: LocalNotifications, public plt: Platform) {
     this.navCtrl = navCtrl;
     this.navParams = navParams;
     this.page = {
@@ -564,11 +564,19 @@ export class TrackingPage{
   };
 
   private alertNotification = function(title: string, text: string) {
+    console.log("ios", this.plt.is("ios"));
+    console.log("android", this.plt.is("android"));
+    let sound = "";
+    if(this.plt.is("ios")) {
+      sound = 'file://beep.caf';
+    } else if(this.plt.is("android")) {
+      sound = 'file://sound.mp3';
+    }
     this.localNotifications.schedule({
       id: new Date().getTime(),
       title: title,
       text: text,
-      sound: 'file://beep.caf',
+      sound: sound,
       data: {}
     });
   };
