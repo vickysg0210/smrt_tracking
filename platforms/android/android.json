@@ -56,7 +56,8 @@
               "xml": "<feature name=\"LocalNotification\"><param name=\"android-package\" value=\"de.appplant.cordova.plugin.localnotification.LocalNotification\" /></feature>",
               "count": 1
             }
-          ]
+          ],
+          "/widget": []
         }
       },
       "AndroidManifest.xml": {

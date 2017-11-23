@@ -64,7 +64,8 @@
               "xml": "<feature name=\"LocalNotification\"><param name=\"ios-package\" onload=\"true\" value=\"APPLocalNotification\" /><param name=\"onload\" value=\"true\" /></feature>",
               "count": 1
             }
-          ]
+          ],
+          "/widget": []
         }
       },
       "*-Info.plist": {

@@ -25592,6 +25592,7 @@ page-notifications .topic .content {
   margin-top: 10px;
   color: black;
   font-size: 14px;
+  white-space: normal;
 }
 
 page-tracking .nav-badge {

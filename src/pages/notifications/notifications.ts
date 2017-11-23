@@ -54,7 +54,7 @@ export class NotificationsPage {
           // {
           //   topicId: 1,
           //   title: "Notification to Khoa",
-          //   content: "Where are you Khoa?",
+          //   content: "Where are you Khoa? please reply me as soon as possible!",
           //   needReply: false,
           //   acceptText: "Home",
           //   rejectText: "Toilet",
