@@ -7,9 +7,17 @@
       <ion-list class="loginList">
         <ion-item class="input">
           <ion-label class="lable">Device :</ion-label>
-          <ion-input type="string" [(ngModel)]="device.name" name = "deviceName"></ion-input>
+          <ion-input type="text" [(ngModel)]="device.name" name="deviceName"></ion-input>
         </ion-item>
-          <button ion-button block class="loginButton">Link Device</button>
-        </ion-list>
+        <!-- <ion-item class="input">
+          <ion-label class="lable">User ID :</ion-label>
+          <ion-input type="text" name="userId"></ion-input>
+        </ion-item>
+        <ion-item class="input">
+          <ion-label class="lable">Password :</ion-label>
+          <ion-input type="password" name="password"></ion-input>
+        </ion-item> -->
+        <button ion-button block class="loginButton">Link Device</button>
+      </ion-list>
     </form>
 </ion-content>
